@@ -1,9 +1,9 @@
-package annotation;
+package hex.annotation;
 
-import annotation.mock.IMockAnnotationContainer;
-import annotation.mock.MockAnnotationContainer;
-import annotation.mock.MockContainerWithoutAnnotation;
-import annotation.mock.MockExtendedAnnotationContainer;
+import hex.annotation.mock.IMockAnnotationContainer;
+import hex.annotation.mock.MockAnnotationContainer;
+import hex.annotation.mock.MockContainerWithoutAnnotation;
+import hex.annotation.mock.MockExtendedAnnotationContainer;
 import hex.domain.Domain;
 import hex.log.ILogger;
 import hex.log.Logger;

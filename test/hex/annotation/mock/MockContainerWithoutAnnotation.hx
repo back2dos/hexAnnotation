@@ -1,4 +1,4 @@
-package annotation.mock;
+package hex.annotation.mock;
 
 import hex.log.ILogger;
 

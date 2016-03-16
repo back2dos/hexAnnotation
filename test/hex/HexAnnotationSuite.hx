@@ -1,10 +1,12 @@
-package annotation;
+package hex;
+
+import hex.annotation.AnnotationReaderTest;
 
 /**
  * ...
  * @author Francis Bourre
  */
-class AnnotationSuite
+class HexAnnotationSuite
 {
 	@Suite( "Annotation suite" )
     public var list : Array<Class<Dynamic>> = [ AnnotationReaderTest ];

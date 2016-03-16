@@ -1,4 +1,4 @@
-package annotation;
+package hex.annotation;
 
 /**
  * @author Francis Bourre

@@ -1,4 +1,4 @@
-package annotation;
+package hex.annotation;
 
 import haxe.Json;
 import haxe.macro.Context;
@@ -161,7 +161,7 @@ class AnnotationReader
 						properties.push( { annotationDatas: annotationDatas, propertyName: f.name, propertyType: propertyType } );
 
 					case FFun( func ) :
-						var argumentDatas : Array<annotation.ArgumentData> = [];
+						var argumentDatas : Array<hex.annotation.ArgumentData> = [];
 						for ( arg in func.args )
 						{
 							switch ( arg.type )

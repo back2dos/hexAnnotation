@@ -1,6 +1,6 @@
 package;
 
-import annotation.AnnotationSuite;
+import hex.HexAnnotationSuite;
 import hex.unittest.runner.ExMachinaUnitCore;
 import hex.unittest.runner.TestRunner;
 
@@ -27,7 +27,7 @@ class MainAnnotationTest
 		emu.addListener( new ConsoleNotifier( false ) );
 		#end
 		
-        emu.addTest( AnnotationSuite );
+        emu.addTest( HexAnnotationSuite );
         emu.run();
 	}
 }

@@ -1,4 +1,4 @@
-package annotation;
+package hex.annotation;
 
 import haxe.Json;
 import haxe.rtti.Meta;
