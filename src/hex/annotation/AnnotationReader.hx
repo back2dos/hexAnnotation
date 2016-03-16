@@ -42,7 +42,7 @@ class AnnotationReader
 	}
 	
 	#if macro
-	public static function parseMetadata( metadataName : String, allowedAnnotations : Array<String> = null ) : Array<Field>
+	public static function parseMetadata( metadataName : String, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
 	{
 		//var print:Printer = new Printer();
 		var classFields = Context.getBuildFields();
@@ -135,6 +135,10 @@ class AnnotationReader
 					annotationDatas.unshift( { annotationName: m.name, annotationKeys: annotationKeys } );
 					f.meta.remove( m );//remove metadata
 					
+				}
+				else if ( displayWarning && m.name.charAt( 0 ) != ":" )
+				{
+					trace( "Warning: Unregistered annotation '@" + m.name + "' found on field '" + Context.getLocalClass().get().module + "::" + f.name + "'" );
 				}
 				metaID--;
 			}
