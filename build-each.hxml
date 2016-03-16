@@ -1,0 +1,7 @@
+-main MainAnnotationTest
+-cp src
+-cp test
+-cp hexcore/src
+-cp hexcore/test
+-cp hexunit/src
+-cp hexunit/test
