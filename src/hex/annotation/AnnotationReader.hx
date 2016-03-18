@@ -17,11 +17,6 @@ class AnnotationReader
 
 	}
 
-	macro private static function parseAnnotations() : Expr
-	{
-		return Context.makeExpr( AnnotationReader._static_classes, Context.currentPos() );
-	}
-
 	macro public static function readMetadata( metadataName : String, allowedAnnotations : Array<String> = null ) : Array<Field>
 	{
 		var localClass = Context.getLocalClass().get();
@@ -44,21 +39,8 @@ class AnnotationReader
 	#if macro
 	public static function parseMetadata( metadataName : String, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
 	{
-		//var print:Printer = new Printer();
 		var classFields = Context.getBuildFields();
-
-		//var superFields = superClass.t.get().fields.get();
-
 		var localClass = Context.getLocalClass().get();
-
-		for ( interf in localClass.interfaces )
-		{
-			if ( interf.t.toString() == "hex.metadata.mock.IMockAnnotationContainer" )
-			{
-				localClass.interfaces.remove( interf );
-			}
-		}
-
 		var superClassName : String;
 		var superClassAnnotationData : ClassAnnotationData = null;
 
