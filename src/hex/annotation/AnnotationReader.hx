@@ -120,7 +120,7 @@ class AnnotationReader
 				}
 				else if ( displayWarning && m.name.charAt( 0 ) != ":" )
 				{
-					trace( "Warning: Unregistered annotation '@" + m.name + "' found on field '" + Context.getLocalClass().get().module + "::" + f.name + "'" );
+					Context.warning( "Warning: Unregistered annotation '@" + m.name + "' found on field '" + Context.getLocalClass().get().module + "::" + f.name + "'", m.pos );
 				}
 				metaID--;
 			}
