@@ -1,6 +1,5 @@
 package hex.annotation;
 
-import haxe.Json;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
@@ -26,12 +25,15 @@ class AnnotationReader
 		
 		//get data result
 		var data = AnnotationReader._static_classes[ AnnotationReader._static_classes.length - 1 ];
-		
-		//create Json
-		var json = Json.stringify( data );
-		
-		//add metadata
-		localClass.meta.add( metadataName, [ Context.parse( "'" + json + "'", localClass.pos ) ], localClass.pos );
+
+		//append the expression as a field
+		fields.push(
+		{
+			name:  "__INJECTION_DATA",
+			access:  [ Access.APublic, Access.AStatic ],
+			kind: FieldType.FVar(macro:hex.annotation.ClassAnnotationData, macro $v{ data } ), 
+			pos: Context.currentPos(),
+		});
 		
 		return fields;
 	}

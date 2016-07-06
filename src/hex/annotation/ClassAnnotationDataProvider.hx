@@ -1,7 +1,5 @@
 package hex.annotation;
 
-import haxe.Json;
-import haxe.rtti.Meta;
 import hex.collection.HashMap;
 
 /**
@@ -26,14 +24,14 @@ class ClassAnnotationDataProvider implements IClassAnnotationDataProvider
 	
 	function _getClassAnnotationData( type : Class<Dynamic>)  : ClassAnnotationData
     {
-        var meta = Reflect.field( Meta.getType( type ), this._metadataName );
-        if ( meta != null )
-        {
-            var classAnnotationData : ClassAnnotationData = Json.parse( meta );
-            this._annotatedClasses.put( type, classAnnotationData );
-            return Json.parse( meta );
-        }
-        else
+		var field : ClassAnnotationData = Reflect.getProperty( type, "__INJECTION_DATA" );
+		
+		if ( field != null )
+		{
+			this._annotatedClasses.put( type, field );
+			return field;
+		}
+		else
         {
             return null;
         }
