@@ -123,7 +123,7 @@ class AnnotationReaderTest
         Assert.deepEquals( ["testMethodWithPrimMetadata"], annotationData0.annotationKeys, "annotation keys should be the same" );
         var annotationData1 : AnnotationData = method0.annotationDatas[ 1 ];
         Assert.equals( "PostConstruct", annotationData1.annotationName, "annotation name should be the same" );
-        Assert.deepEquals( ["0"], annotationData1.annotationKeys, "annotation keys should be the same" );
+        Assert.equals( 0, annotationData1.annotationKeys[ 0 ], "annotation keys should be the same" );
 
         var method1 : MethodAnnotationData = data.methods[ 1 ];
         Assert.equals( "_methodToOverride", method1.methodName, "method name should be the same" );
