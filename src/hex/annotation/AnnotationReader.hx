@@ -110,8 +110,17 @@ class AnnotationReader
 									case CIdent("false"):
 										annotationKeys.push( false );
 
-									default: null;
+									case CRegexp( r, opt ):
+										//do nothing
+
+									case CIdent( v ):
+										annotationKeys.push( hex.util.MacroUtil.getClassNameFromExpr( param ) );
+
+									default: 
+										null;
 								}
+							case EField( e, field ):
+								annotationKeys.push( haxe.macro.ExprTools.toString( e ) + "." + field );
 
 							default: null;
 						}
