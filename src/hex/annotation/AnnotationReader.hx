@@ -2,6 +2,7 @@ package hex.annotation;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import hex.error.PrivateConstructorException;
 
 /**
  * ...
@@ -11,17 +12,18 @@ class AnnotationReader
 {
 	public static var _static_classes : Array<ClassAnnotationData> = [];
 
-	function new()
-	{
+	/** @private */
+    function new()
+    {
+        throw new PrivateConstructorException( "This class can't be instantiated." );
+    }
 
-	}
-
-	macro public static function readMetadata( metadataName : String, allowedAnnotations : Array<String> = null ) : Array<Field>
+	macro public static function readMetadata( metadataExpr : Expr, allowedAnnotations : Array<String> = null ) : Array<Field>
 	{
 		var localClass = Context.getLocalClass().get();
 		
 		//parse annotations
-		var fields : Array<Field> = AnnotationReader.parseMetadata( metadataName, allowedAnnotations );
+		var fields : Array<Field> = AnnotationReader.parseMetadata( metadataExpr, allowedAnnotations );
 		
 		//get data result
 		var data = AnnotationReader._static_classes[ AnnotationReader._static_classes.length - 1 ];
@@ -31,7 +33,7 @@ class AnnotationReader
 		{
 			name:  "__INJECTION_DATA",
 			access:  [ Access.APublic, Access.AStatic ],
-			kind: FieldType.FVar(macro:hex.annotation.ClassAnnotationData, macro $v{ data } ), 
+			kind: FieldType.FVar( macro: hex.annotation.ClassAnnotationData, macro $v{ data } ), 
 			pos: Context.currentPos(),
 		});
 		
@@ -39,8 +41,27 @@ class AnnotationReader
 	}
 	
 	#if macro
-	public static function parseMetadata( metadataName : String, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
+	public static function parseMetadata( metadataExpr : Expr, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
 	{
+		//parse metadata name
+		var metadataName = switch( metadataExpr.expr )
+		{
+			case EConst( c ):
+				switch ( c )
+				{
+					case CIdent( v ):
+						hex.util.MacroUtil.getClassNameFromExpr( metadataExpr );
+
+					default: 
+						null;
+				}
+
+			case EField( e, field ):
+				haxe.macro.ExprTools.toString( e ) + "." + field;
+
+			default: null;
+		}
+		
 		var classFields = Context.getBuildFields();
 		var localClass = Context.getLocalClass().get();
 		var superClassName : String;
