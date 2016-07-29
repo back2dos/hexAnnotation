@@ -25,9 +25,10 @@ class MockAnnotationContainer extends MockContainerWithoutAnnotation implements 
 		super( logger );
 	}
 	
+	//TODO add test for function parameters annotations
 	@Test( "testMethodWithPrimMetadata" )
 	@PostConstruct( 0 )
-	public function testMethodWithPrim( i : Int, u : UInt, b : Bool, s : String, f : Float ) : Void
+	public function testMethodWithPrim( i : Int, u : UInt, b : Bool, @RequestParam( { value: "name", required: false, defaultValue: "World" } ) s : String, f : Float ) : Void
 	{
 		//
 	}
@@ -35,7 +36,7 @@ class MockAnnotationContainer extends MockContainerWithoutAnnotation implements 
 	@Test( "methodToOverrideMetadata" )
 	@PostConstruct( 1 )
 	@Optional( true )
-	private function _methodToOverride( element : Logger ) : Void
+	function _methodToOverride( element : Logger ) : Void
 	{
 		//
 	}
