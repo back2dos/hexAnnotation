@@ -25,6 +25,7 @@ class MockAnnotationContainer extends MockContainerWithoutAnnotation implements 
 		super( logger );
 	}
 	
+	#if ( haxe_ver >= "3.3" )
 	//TODO add test for function parameters annotations
 	@Test( "testMethodWithPrimMetadata" )
 	@PostConstruct( 0 )
@@ -32,7 +33,8 @@ class MockAnnotationContainer extends MockContainerWithoutAnnotation implements 
 	{
 		//
 	}
-
+	#end
+	
 	@Test( "methodToOverrideMetadata" )
 	@PostConstruct( 1 )
 	@Optional( true )
