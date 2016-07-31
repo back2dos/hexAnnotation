@@ -229,7 +229,6 @@ class AnnotationReader
 						}
 
 					default: null;
-					//case _: Context.error( "@nnotation must be used on properties", Context.currentPos() );
 				}
 			}
 		}
