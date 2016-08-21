@@ -162,7 +162,15 @@ class AnnotationReader
 				switch ( f.kind )
 				{
 					case FVar( TPath( p ), e ):
-						var t : haxe.macro.Type = Context.getType( p.pack.concat( [ p.name ] ).join( '.' ) );
+						var t : haxe.macro.Type = null;
+						try
+						{
+							t = Context.getType( p.pack.concat( [ p.name ] ).join( '.' ) );
+						}
+						catch ( e : Dynamic )
+						{
+							Context.error( e, f.pos );
+						}
 						var propertyType : String = "";
 						switch ( t )
 						{
