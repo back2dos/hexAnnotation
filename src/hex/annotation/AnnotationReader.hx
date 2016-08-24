@@ -171,16 +171,20 @@ class AnnotationReader
 						{
 							Context.error( e, f.pos );
 						}
+						
 						var propertyType : String = "";
 						switch ( t )
 						{
 							case TInst( t, p ):
 								var ct = t.get();
 								propertyType = ct.pack.concat( [ct.name] ).join( '.' );
+								
 							case TAbstract( t, params ):
 								propertyType = t.toString();
+								
 							case TDynamic( t ):
 								propertyType = "Dynamic";
+								
 							default:
 						}
 
@@ -193,17 +197,29 @@ class AnnotationReader
 							switch ( arg.type )
 							{
 								case TPath( p ):
-									var t : haxe.macro.Type = Context.getType( p.pack.concat( [ p.name ] ).join( '.' ) );
+									var t : haxe.macro.Type = null;
+									try
+									{
+										t = Context.getType( p.pack.concat( [ p.name ] ).join( '.' ) );
+									}
+									catch ( e : Dynamic )
+									{
+										Context.error( e, f.pos );
+									}
+
 									var argumentType : String = "";
 									switch ( t )
 									{
 										case TInst( t, p ):
 											var ct = t.get();
 											argumentType = ct.pack.concat( [ct.name] ).join( '.' );
+											
 										case TAbstract( t, params ):
 											argumentType = t.toString();
+											
 										case TDynamic( t ):
 											argumentType = "Dynamic";
+											
 										default:
 									}
 
