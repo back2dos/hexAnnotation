@@ -23,7 +23,7 @@ class AnnotationReader
 		var localClass = Context.getLocalClass().get();
 		
 		//parse annotations
-		var fields : Array<Field> = AnnotationReader.parseMetadata( metadataExpr, allowedAnnotations );
+		var fields : Array<Field> = AnnotationReader.parseMetadata( metadataExpr, Context.getBuildFields(), allowedAnnotations );
 		
 		//get data result
 		var data = AnnotationReader._static_classes[ AnnotationReader._static_classes.length - 1 ];
@@ -41,7 +41,7 @@ class AnnotationReader
 	}
 	
 	#if macro
-	public static function parseMetadata( metadataExpr : Expr, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
+	public static function parseMetadata( metadataExpr : Expr, classFields : Array<Field>, allowedAnnotations : Array<String> = null, displayWarning : Bool = false ) : Array<Field>
 	{
 		//parse metadata name
 		var metadataName = switch( metadataExpr.expr )
@@ -62,7 +62,6 @@ class AnnotationReader
 			default: null;
 		}
 		
-		var classFields = Context.getBuildFields();
 		var localClass = Context.getLocalClass().get();
 		var superClassName : String;
 		var superClassAnnotationData : ClassAnnotationData = null;
@@ -99,6 +98,7 @@ class AnnotationReader
 		{
 			var annotationDatas : Array<AnnotationData> = [];
 			var metaID = f.meta.length -1;
+			
 			while ( metaID > -1 )
 			{
 				var m = f.meta[ metaID ];
@@ -148,7 +148,6 @@ class AnnotationReader
 					}
 					annotationDatas.unshift( { annotationName: m.name, annotationKeys: annotationKeys } );
 					f.meta.remove( m );//remove metadata
-					
 				}
 				else if ( displayWarning && m.name.charAt( 0 ) != ":" )
 				{
