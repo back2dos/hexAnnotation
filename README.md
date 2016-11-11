@@ -8,20 +8,40 @@ Utilities for reading and writing class metadata
 ## Dependencies
 
 * [hexCore](https://github.com/DoclerLabs/hexCore)
-
+* [hexReflection](https://github.com/DoclerLabs/hexReflection)
 
 ## Features
 
 - Read metadata at compile time.
 - Handles inheritance chain.
-- Read properties and methods signatures (can be used by DI frameworks).
-- Filter metadata parsing with a list of metadata names.
-- Compress fields metadata to new class metadata.
+- Read properties and methods signatures (to be used by DI frameworks).
+- Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
 
 ## Simple example
 ```haxe
-@:autoBuild( annotation.AnnotationReader.readMetadata( "annotation.mock.IMockAnnotationContainer", [ "Inject", "Language", "Test", "PostConstruct", "Optional", "ConstructID" ] ) )
-interface IMockAnnotationContainer
+class MockClassInjectee implements IContainer
+{
+	@Inject( "id" )
+	public function new( arg : Int ) 
+	{
+		//constructor informations will be stored
+	}
+	
+	public function doSomething() : Void
+	{
+		//this method will be ignored
+	}
+	
+	@PostConstruct( 1 )
+	public function doSomething() : Void
+	{
+		//this method description will be stored as well
+	}
+}
+
+
+@:autoBuild( hex.di.annotation.FastAnnotationReader.readMetadata( IContainer ) )
+interface IContainer
 {
 	
 }
