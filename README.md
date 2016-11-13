@@ -8,21 +8,48 @@ Utilities for reading and writing class metadata
 ## Dependencies
 
 * [hexCore](https://github.com/DoclerLabs/hexCore)
-
+* [hexReflection](https://github.com/DoclerLabs/hexReflection)
 
 ## Features
 
 - Read metadata at compile time.
 - Handles inheritance chain.
-- Read properties and methods signatures (can be used by DI frameworks).
-- Filter metadata parsing with a list of metadata names.
-- Compress fields metadata to new class metadata.
+- Read properties and methods signatures (to be used by DI frameworks).
+- Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
 
 ## Simple example
+
+To generate a class description at compile-time, implement IInjectorContainer and add annotations on the members that you want to produce reflection.
+
 ```haxe
-@:autoBuild( annotation.AnnotationReader.readMetadata( "annotation.mock.IMockAnnotationContainer", [ "Inject", "Language", "Test", "PostConstruct", "Optional", "ConstructID" ] ) )
-interface IMockAnnotationContainer
+class MockClassInjectee implements IInjectorContainer
 {
+	0Inject( "id" )
+	public var property : String;
+	//property informations will be stored
 	
+	@Inject( "id" )
+	public function new( arg : Int ) 
+	{
+		//constructor informations will be stored
+	}
+	
+	public function doSomething() : Void
+	{
+		//this method will be ignored
+	}
+	
+	@PostConstruct( 1 )
+	public function doSomething() : Void
+	{
+		//this method description will be stored as well
+	}
 }
+```
+
+To get your reflection data at runtime, use FastClassDescriptionProvider like shown below.
+
+```haxe
+var provider = new FastClassDescriptionProvider();
+var description = provider.getClassDescription( MockClassInjectee );
 ```
