@@ -19,8 +19,12 @@ Utilities for reading and writing class metadata
 
 ## Simple example
 ```haxe
-class MockClassInjectee implements IContainer
+class MockClassInjectee implements IInjectorContainer
 {
+	0Inject( "id" )
+	public var property : String;
+	//property informations will be stored
+	
 	@Inject( "id" )
 	public function new( arg : Int ) 
 	{
@@ -37,12 +41,5 @@ class MockClassInjectee implements IContainer
 	{
 		//this method description will be stored as well
 	}
-}
-
-
-@:autoBuild( hex.di.annotation.FastAnnotationReader.readMetadata( IContainer ) )
-interface IContainer
-{
-	
 }
 ```
