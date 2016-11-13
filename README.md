@@ -18,6 +18,9 @@ Utilities for reading and writing class metadata
 - Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
 
 ## Simple example
+
+To generate a class description at compile-time, implement IInjectorContainer and add annotations on the members that you want to produce reflection.
+
 ```haxe
 class MockClassInjectee implements IInjectorContainer
 {
@@ -42,4 +45,11 @@ class MockClassInjectee implements IInjectorContainer
 		//this method description will be stored as well
 	}
 }
+```
+
+To get your reflection data at runtime, use FastClassDescriptionProvider like shown below.
+
+```haxe
+var provider = new FastClassDescriptionProvider();
+var description = provider.getClassDescription( MockClassInjectee );
 ```
