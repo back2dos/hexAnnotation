@@ -15,6 +15,7 @@ using hex.util.ArrayUtil;
  */
 class ReflectionBuilder
 {
+#if macro
 	/** @private */
     function new()
     {
@@ -203,4 +204,5 @@ class ReflectionBuilder
 		var classDescription = EObjectDecl( finalExpressions );
 		return { expr: classDescription, pos: Context.currentPos() };
 	}
+#end
 }

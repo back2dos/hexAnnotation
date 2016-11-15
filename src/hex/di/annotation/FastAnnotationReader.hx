@@ -12,6 +12,7 @@ import hex.error.PrivateConstructorException;
  */
 class FastAnnotationReader
 {
+#if macro
 	private static var _map : Map<String, ExprOf<ClassDescription>> = new Map();
 	
 	/** @private */
@@ -81,4 +82,5 @@ class FastAnnotationReader
 
 		return fields;
 	}
+#end
 }
