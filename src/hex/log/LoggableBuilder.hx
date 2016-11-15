@@ -12,6 +12,8 @@ import hex.util.MacroUtil;
  */
 class LoggableBuilder
 {
+#if macro
+
 	public static inline var DebugAnnotation 	= "Debug";
 	public static inline var InfoAnnotation 	= "Info";
 	public static inline var WarnAnnotation 	= "Warn";
@@ -192,6 +194,7 @@ class LoggableBuilder
 		}
 		return new LogSetting();
 	}
+#end
 }
 
 private class LogSetting
