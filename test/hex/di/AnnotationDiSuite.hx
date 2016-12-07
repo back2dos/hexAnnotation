@@ -1,4 +1,5 @@
 package hex.di;
+import hex.di.reflect.AnnotationReflectSuite;
 
 /**
  * ...
