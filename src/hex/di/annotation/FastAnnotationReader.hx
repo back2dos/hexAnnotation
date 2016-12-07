@@ -5,6 +5,8 @@ import haxe.macro.Expr;
 import haxe.macro.Expr.Field;
 import hex.di.reflect.ClassDescription;
 import hex.error.PrivateConstructorException;
+import hex.reflect.ClassReflectionData;
+import hex.util.ArrayUtil;
 
 /**
  * ...
@@ -52,15 +54,43 @@ class FastAnnotationReader
 		var className 		= localClass.pack.join( "." ) + "." + localClass.name;
 		var hasBeenBuilt 	= FastAnnotationReader._map.exists( className );
 		
-		//parse annotations
-		fields = hex.reflect.ReflectionBuilder.parseMetadata( metadataExpr, fields, [ "Inject", "PostConstruct", "Optional", "PreDestroy" ], false );
-	
-		//get/set data result
-		var data = hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ];
-		//merge with existing data
+		var reflectionData:Null<ExprOf<ClassDescription>>;
 		
-		//get reflection data
-		var reflectionData = hex.di.annotation.ReflectionBuilder.getClassDescriptionExpression( data );
+		var annotationFilter = [ "Inject", "PostConstruct", "Optional", "PreDestroy" ];
+		
+		if (hasBeenBuilt)
+		{
+			// get the existing data and remove them from the static_classes
+			var existingData = ArrayUtil.find(hex.reflect.ReflectionBuilder._static_classes, d => d.name == localClass.module);
+			hex.reflect.ReflectionBuilder._static_classes.remove(existingData);
+			
+			// reflect new fields
+			fields = hex.reflect.ReflectionBuilder.parseMetadata( metadataExpr, fields, annotationFilter, false );
+			
+			// get new fields
+			var data = hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ];
+			
+			//merge everything together
+			var mergedData = mergeReflectionData(existingData, data);
+			
+			//write the merged data back
+			hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ] = mergedData;
+			
+			//get complete reflection data
+			reflectionData = hex.di.annotation.ReflectionBuilder.getClassDescriptionExpression( mergedData );
+		}
+		else
+		{
+			//parse annotations
+			fields = hex.reflect.ReflectionBuilder.parseMetadata( metadataExpr, fields, annotationFilter, false );
+			
+			//get/set data result
+			var data = hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ];
+			
+			//get reflection data
+			reflectionData = hex.di.annotation.ReflectionBuilder.getClassDescriptionExpression( data );
+		}
+		
 		FastAnnotationReader._map.set( className, reflectionData );
 		
 		var f = fields.filter( function ( f ) { return f.name == "__INJECTION_DATA"; } );
@@ -82,5 +112,17 @@ class FastAnnotationReader
 
 		return fields;
 	}
+	
+	static private function mergeReflectionData(data1:ClassReflectionData, data2:ClassReflectionData):ClassReflectionData
+	{
+		return {
+			name: data1.name,
+			superClassName: data1.superClassName,
+			constructor: data2.constructor, // using constructor from the new data (nothing to merge here)
+			properties: data1.properties.concat(data2.properties),
+			methods: data1.methods.concat(data2.methods)
+		};
+	}
+	
 #end
 }
