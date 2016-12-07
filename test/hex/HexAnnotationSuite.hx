@@ -1,5 +1,6 @@
 package hex;
 
+import hex.di.AnnotationDiSuite;
 import hex.log.AnnotationLogSuite;
 
 /**
@@ -9,5 +10,5 @@ import hex.log.AnnotationLogSuite;
 class HexAnnotationSuite
 {
 	@Suite( "Annotation suite" )
-    public var list : Array<Class<Dynamic>> = [ AnnotationLogSuite ];
+    public var list : Array<Class<Dynamic>> = [ AnnotationLogSuite, AnnotationDiSuite ];
 }
