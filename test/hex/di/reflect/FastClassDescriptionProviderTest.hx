@@ -19,12 +19,14 @@ class FastClassDescriptionProviderTest
 		Assert.deepEquals( MockClass.__INJECTION_DATA, description, "description should be the same" );
 	}
 	
+	#if debug
 	@Test( "Test getClassDescription with null parameter" )
 	public function testGetClassDescriptionWithNullParameter() : Void
 	{
 		var provider = new FastClassDescriptionProvider();
 		Assert.methodCallThrows( NullPointerException, provider, provider.getClassDescription, [null], "'getClassDescription' should throw 'NullPointerException' when called with null argument" );
 	}
+	#end
 }
 
 private class MockClass

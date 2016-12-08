@@ -22,6 +22,7 @@ class IsLoggableTest
 		loggable.logger = logger;
 	}
 	
+	#if debug
 	@Test( "test debug" )
 	public function testDebug(): Void
 	{
@@ -120,6 +121,7 @@ class IsLoggableTest
 		var p = MockLoggableClassInjected.__INJECTION_DATA.p.filter( function ( o ) { return (cast o).p == "logger" && (cast o).t == "hex.log.ILogger"; } );
 		Assert.equals( 1, p.length, "'MockLoggableClassInjected' should have reflection data for its logger property" );
 	}
+	#end
 }
 
 private class MockLogger implements ILogger

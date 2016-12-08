@@ -111,9 +111,7 @@ class LoggableBuilder
 		
 						var body = macro @:pos(f.pos) @:mergeBlock
 						{
-							#if debug
 							logger.$methodName( [$a { debugArgs } ] );
-							#end
 						};
 
 						expressions.push( body );
