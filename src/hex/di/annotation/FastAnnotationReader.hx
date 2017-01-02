@@ -30,22 +30,8 @@ class FastAnnotationReader
 		{
 			return Context.getBuildFields();
 		}
-		
-		var fields 			= Context.getBuildFields();
-		var localClass 		= Context.getLocalClass().get();
-		var className 		= localClass.pack.join( "." ) + "." + localClass.name;
-		var hasBeenBuilt 	= FastAnnotationReader._map.exists( className );
-		
-		if ( !hasBeenBuilt )
-		{
-			return reflect( metadataExpr, fields );
-		}
-		else
-		{
-			Context.warning( "Class description already exists for '" + className + "' class. You should not implement 'IInjectorContainer' twice", localClass.pos );
-		}
-		
-		return reflect( metadataExpr, fields );
+
+		return reflect( metadataExpr, Context.getBuildFields() );
 	}
 	
 	public static function reflect( metadataExpr : Expr, fields : Array<Field>  ) : Array<Field>
@@ -58,7 +44,7 @@ class FastAnnotationReader
 		
 		var annotationFilter = [ "Inject", "PostConstruct", "Optional", "PreDestroy" ];
 		
-		if (hasBeenBuilt)
+		if ( hasBeenBuilt )
 		{
 			// get the existing data and remove them from the static_classes
 			var existingData = ArrayUtil.find(hex.reflect.ReflectionBuilder._static_classes, d => d.name == localClass.module);
