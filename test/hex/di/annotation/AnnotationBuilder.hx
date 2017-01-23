@@ -1,5 +1,6 @@
-#if macro
 package hex.di.annotation;
+
+#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
 
