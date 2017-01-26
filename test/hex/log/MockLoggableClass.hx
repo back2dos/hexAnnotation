@@ -40,7 +40,6 @@ class MockLoggableClass implements IsLoggable
 	}
 	
 	@Fatal
-	@New
 	public function fatal( s : String, i : Int ) : Void
 	{
 		
