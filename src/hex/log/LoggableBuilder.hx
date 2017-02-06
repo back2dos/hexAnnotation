@@ -20,8 +20,6 @@ class LoggableBuilder
 	public static inline var ErrorAnnotation 	= "Error";
 	public static inline var FatalAnnotation 	= "Fatal";
 	
-	static var _isLoggableInterface = MacroUtil.getClassType( Type.getClassName( IsLoggable ) );
-	
 	/** @private */
     function new()
     {
@@ -50,7 +48,7 @@ class LoggableBuilder
 		if ( superClass != null )
 		{
 			var classType = MacroUtil.getClassType( superClass.t.toString() );
-			if ( MacroUtil.implementsInterface( classType, _isLoggableInterface ) )
+			if ( MacroUtil.implementsInterface( classType, MacroUtil.getClassType( Type.getClassName( IsLoggable ) ) ) )
 			{
 				shouldAddField = false;
 			}
