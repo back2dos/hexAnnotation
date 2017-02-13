@@ -20,7 +20,7 @@ class FastAnnotationReader
 	/** @private */
     function new()
     {
-        throw new PrivateConstructorException( "This class can't be instantiated." );
+        throw new PrivateConstructorException();
     }
 	
 	macro public static function readMetadata( metadataExpr : Expr ) : Array<Field>

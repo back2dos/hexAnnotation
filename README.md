@@ -1,6 +1,5 @@
-# hexAnnotation
+# hexAnnotation [![TravisCI Build Status](https://travis-ci.org/DoclerLabs/hexAnnotation.svg?branch=master)](https://travis-ci.org/DoclerLabs/hexAnnotation)
 
-[![TravisCI Build Status](https://travis-ci.org/DoclerLabs/hexAnnotation.svg?branch=master)](https://travis-ci.org/DoclerLabs/hexAnnotation)
 Utilities for reading and writing class metadata
 
 *Find more information about hexMachina on [hexmachina.org](http://hexmachina.org/)*
