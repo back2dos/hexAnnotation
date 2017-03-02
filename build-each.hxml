@@ -1,10 +1,7 @@
 -main MainAnnotationTest
--cp src
+
+-lib hexannotation
+-lib hexunit
+
 -cp test
--cp hexcore/src
--cp hexcore/test
--cp hexreflection/src
--cp hexreflection/test
--cp hexunit/src
--cp hexunit/test
 -D debug=true
