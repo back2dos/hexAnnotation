@@ -203,7 +203,7 @@ private class MockLogger implements ILogger
 	
 	public function getLevel():LogLevel 
 	{
-		return null;
+		return LogLevel.OFF;
 	}
 	
 	public function getName():String 
