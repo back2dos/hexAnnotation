@@ -33,10 +33,19 @@ before_install:
 
 install:
   - haxelib newrepo
-  - haxelib git hexlog https://github.com/DoclerLabs/hexLog.git $DEPENDENCIES_BRANCH --never
-  - haxelib git hexunit https://github.com/DoclerLabs/hexUnit.git $DEPENDENCIES_BRANCH --never
-  - haxelib git hexreflection https://github.com/DoclerLabs/hexReflection.git $DEPENDENCIES_BRANCH --never
-  - haxelib git hexcore https://github.com/DoclerLabs/hexCore.git $DEPENDENCIES_BRANCH --never
+#hexLog
+  - git clone --recursive -b $DEPENDENCIES_BRANCH https://github.com/DoclerLabs/hexLog.git ./hexlog
+  - haxelib dev hexlog ./hexlog
+#hexCore
+  - git clone --recursive -b $DEPENDENCIES_BRANCH https://github.com/DoclerLabs/hexCore.git ./hexcore
+  - haxelib dev hexcore ./hexcore
+#hexUnit
+  - git clone --recursive -b $DEPENDENCIES_BRANCH https://github.com/DoclerLabs/hexUnit.git ./hexunit
+  - haxelib dev hexunit ./hexunit
+#hexReflection
+  - git clone --recursive -b $DEPENDENCIES_BRANCH https://github.com/DoclerLabs/hexReflection.git ./hexreflection
+  - haxelib dev hexreflection ./hexreflection
+#hexAnnotation
   - haxelib dev hexannotation .
   - export DISPLAY=:99.0;
   - export AUDIODEV=null;
