@@ -6,11 +6,10 @@
   "description": "Utilities for reading and writing metadata",
   "contributors": ["doclerlabs"],
   "releasenote": "First release. Still alpha testing",
-  "version": "0.1.0",
+  "version": "git",
   "url": "https://github.com/DoclerLabs/hexAnnotation",
   "dependencies": 
   {
-	"hexcore": "git:https://github.com/DoclerLabs/hexCore.git",
 	"hexreflection": "git:https://github.com/DoclerLabs/hexReflection.git"
   }
 }
