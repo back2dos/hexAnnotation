@@ -109,6 +109,7 @@ class LoggableBuilder
 		
 						var body = macro @:pos(f.pos) @:mergeBlock
 						{
+							if ( logger == null ) logger = ${hex.log.HexLog.getLoggerCall()};
 							logger.$methodName( [$a { debugArgs } ] );
 						};
 
