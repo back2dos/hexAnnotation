@@ -23,7 +23,7 @@ To generate a class description at compile-time, implement IInjectorContainer an
 ```haxe
 class MockClassInjectee implements IInjectorContainer
 {
-	0Inject( "id" )
+	@Inject( "id" )
 	public var property : String;
 	//property informations will be stored
 	
