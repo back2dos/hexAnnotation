@@ -171,6 +171,66 @@ class IsLoggableTest
 		Assert.isNull( logger.fatalMsg );
 	}
 	
+	@Test( "test no arguments" )
+	public function testNoArguments(): Void
+	{
+		loggable.debugNoArgs();
+		var message = "{}()";
+		var args : Array<Dynamic> = ["debugNoArgs"];
+		
+		Assert.deepEquals( args, logger.debugParams );
+		Assert.equals(message, logger.debugMsg);
+		Assert.isNull( logger.infoMsg );
+		Assert.isNull( logger.warnMsg );
+		Assert.isNull( logger.errorMsg );
+		Assert.isNull( logger.fatalMsg );
+	}
+	
+	@Test( "test no arguments with custom message" )
+	public function testNoArgumentsCustomMessage(): Void
+	{
+		loggable.debugNoArgsCustomMessage();
+		var message = "no arguments";
+		var args : Array<Dynamic> = [];
+		
+		Assert.deepEquals( args, logger.debugParams );
+		Assert.equals(message, logger.debugMsg);
+		Assert.isNull( logger.infoMsg );
+		Assert.isNull( logger.warnMsg );
+		Assert.isNull( logger.errorMsg );
+		Assert.isNull( logger.fatalMsg );
+	}
+	
+	@Test( "test no arguments with custom arguments" )
+	public function testNoArgumentsCustomArgs(): Void
+	{
+		loggable.debugNoArgsCustomArgs();
+		var message = "{}(this.member='{}')";
+		var args : Array<Dynamic> = ["debugNoArgsCustomArgs","member"];
+		
+		Assert.deepEquals( args, logger.debugParams );
+		Assert.equals(message, logger.debugMsg);
+		Assert.isNull( logger.infoMsg );
+		Assert.isNull( logger.warnMsg );
+		Assert.isNull( logger.errorMsg );
+		Assert.isNull( logger.fatalMsg );
+	}
+	
+	@Test( "test no arguments with custom message, custom arguments and includeArgs" )
+	public function testNoArgumentsCustomArgsCustomMessageIncludeArgs(): Void
+	{
+		loggable.debugNoArgsCustomMsgCustomArgsIncludeArgs();
+		var message = "custom message [this.member='{}']";
+		var args : Array<Dynamic> = ["member"];
+		
+		Assert.deepEquals( args, logger.debugParams );
+		Assert.equals(message, logger.debugMsg);
+		Assert.isNull( logger.infoMsg );
+		Assert.isNull( logger.warnMsg );
+		Assert.isNull( logger.errorMsg );
+		Assert.isNull( logger.fatalMsg );
+	}
+	
 	@Test( "test interfaces implementation order" )
 	public function testInterfacesImplementationOrder() : Void
 	{
