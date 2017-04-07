@@ -61,4 +61,33 @@ class MockLoggableClass implements IsLoggable
 	{
 		
 	}
+	
+	@Debug({
+		msg: "customMessage",
+		includeArgs: true
+	})
+	public function debugCustomMessageWithIncludedArgs( s : String, i : Int ) : Void
+	{
+		
+	}
+
+	@Debug({
+		msg: "anotherMessage",
+		arg: [ i, this.member ],
+		includeArgs: true
+	})
+	public function debugCustomArgumentWithIncludedArgs( s : String, i : Int ) : Void
+	{
+		
+	}
+
+	@Debug({
+		arg: [ i, this.member ]
+	})
+	public function debugCustomArgumentOnly( s : String, i : Int ) : Void
+	{
+		
+	}
+	
+	
 }
