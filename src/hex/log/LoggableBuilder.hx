@@ -2,6 +2,7 @@ package hex.log;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Printer;
 import hex.di.annotation.FastAnnotationReader;
 import hex.error.PrivateConstructorException;
 import hex.util.MacroUtil;
@@ -87,30 +88,49 @@ class LoggableBuilder
 						#if debug
 						var logSetting =  LoggableBuilder._getParameters( meta );
 						
-						var methArgs : Array<Expr> = null;
+						var methArgs : Array<Expr> = [];
+						var argsMsg : Array<String> = [];
 						var expressions = [ macro @:mergeBlock { } ];
+						var argPlaceholer = "='{}'";
+						
 						if ( logSetting.arg == null )
 						{
-							methArgs = [ for ( arg in func.args ) macro @:pos(f.pos) $i { arg.name } ];
+							func.args.map(function(arg){
+								argsMsg.push($v{arg.name} + argPlaceholer);
+								methArgs.push(macro @:pos(f.pos) $i { arg.name });
+							});
 						}
 						else
 						{
-							methArgs = [ for ( arg in logSetting.arg ) macro @:pos(f.pos) $arg ];
+							var printer = new Printer();
+							logSetting.arg.map(function(arg){
+								argsMsg.push($v{printer.printExpr(arg)} + argPlaceholer);
+								methArgs.push(macro @:pos(f.pos) $arg);
+							});
 						}
 						
 						//
 						var message = logSetting.message;
+						var debugArgs = [];
 						if ( message == null )
 						{
-							message = className + '::' + f.name;
+							message = "{}(" + argsMsg.join(", ") + ")";
+							debugArgs = [ macro @:pos(f.pos) $v { f.name } ].concat( methArgs );
 						}
-						var debugArgs = [ macro @:pos(f.pos) $v { message } ].concat( methArgs );
+						else
+						{
+							if(logSetting.includeArgs && argsMsg != null)
+							{
+								message += " [" + argsMsg.join(", ") + "]";
+							}
+							debugArgs = methArgs;
+						}
 						var methodName = meta[ 0 ].name.toLowerCase();
 		
 						var body = macro @:pos(f.pos) @:mergeBlock
 						{
 							if ( logger == null ) logger = ${hex.log.HexLog.getLoggerCall()};
-							logger.$methodName( [$a { debugArgs } ] );
+							logger.$methodName( $v{ message }, [ $a { debugArgs } ] );
 						};
 
 						expressions.push( body );
@@ -174,7 +194,14 @@ class LoggableBuilder
 
 										case _: null;
 									}
-									
+								case "includeArgs":
+									switch( f.expr.expr )
+									{
+										case EConst( CIdent( s ) ):
+											logSetting.includeArgs = (s == "true");
+
+										case _: null;
+									}
 								case _: null;
 							}
 						}
@@ -197,6 +224,7 @@ class LoggableBuilder
 private class LogSetting
 {
 	public function new(){}
-	public var message 	: String;
-	public var arg 		: Array<Expr>;
+	public var message 		: String;
+	public var arg 			: Array<Expr>;
+	public var includeArgs	: Bool;
 }
