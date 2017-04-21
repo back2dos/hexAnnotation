@@ -17,6 +17,8 @@ Utilities for reading and writing class metadata
 - Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
 - Generates logging statements based on method annotations
   - More info [here](src/hex/log/README.md)
+- Replaces expressions in annotations with their respective values
+  - More info [here](src/hex/annotation/README.md)
 
 ## Simple example
 
