@@ -1,14 +1,14 @@
-package hex.metadata;
+package hex.annotation;
 
 /**
  * ...
  * @author 
  */
-class AnnotationMetadataSuite 
+class AnnotationTransformSuite 
 {
 	@Suite( "Metadata" )
     public var list : Array<Class<Dynamic>> = [
-		MetadataTransformerTest
+		AnnotationReplaceTest
 	];
 	
 }

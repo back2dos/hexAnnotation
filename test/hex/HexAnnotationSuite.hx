@@ -2,7 +2,7 @@ package hex;
 
 import hex.di.AnnotationDiSuite;
 import hex.log.AnnotationLogSuite;
-import hex.metadata.AnnotationMetadataSuite;
+import hex.annotation.AnnotationTransformSuite;
 
 /**
  * ...
@@ -14,6 +14,6 @@ class HexAnnotationSuite
     public var list : Array<Class<Dynamic>> = [
 		AnnotationLogSuite,
 		AnnotationDiSuite,
-		AnnotationMetadataSuite
+		AnnotationTransformSuite
 	];
 }

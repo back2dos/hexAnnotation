@@ -1,4 +1,4 @@
-package hex.metadata;
+package hex.annotation;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
@@ -9,7 +9,7 @@ using haxe.macro.Tools;
 using Lambda;
 
 #if macro
-class MetadataTransformer 
+class AnnotationReplaceBuilder 
 {
 	
 	static var staticsCache:Map<String,Expr>;

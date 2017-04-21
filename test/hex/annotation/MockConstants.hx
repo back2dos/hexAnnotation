@@ -1,4 +1,4 @@
-package hex.metadata;
+package hex.annotation;
 
 /**
  * ...

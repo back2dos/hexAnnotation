@@ -1,11 +1,11 @@
-package hex.metadata;
+package hex.annotation;
 import hex.di.IInjectorContainer;
 
 /**
  * ...
  * @author 
  */
-class MockMetadataClass implements IMetadataReplace 
+class MockMetadataClass implements IAnnotationReplace 
 {
 
 	public function new() 
@@ -47,7 +47,7 @@ class MockInjectorContainerExtendsMockMetadata extends MockMetadataClass impleme
 	
 }
 
-class MockMetadataClassWithInjectorContainer implements IInjectorContainer implements IMetadataReplace 
+class MockMetadataClassWithInjectorContainer implements IInjectorContainer implements IAnnotationReplace 
 {
 	public function new() 
 	{

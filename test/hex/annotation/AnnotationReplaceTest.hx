@@ -1,17 +1,17 @@
-package hex.metadata;
+package hex.annotation;
 import haxe.rtti.Meta;
 import hex.di.reflect.ClassDescription;
 import hex.di.reflect.FastClassDescriptionProvider;
 import hex.di.reflect.PropertyInjection;
-import hex.metadata.MockMetadataClass.MockInjectorContainerExtendsMockMetadata;
-import hex.metadata.MockMetadataClass.MockMetadataClassWithInjectorContainer;
+import hex.annotation.MockMetadataClass.MockInjectorContainerExtendsMockMetadata;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainer;
 import hex.unittest.assertion.Assert;
 
 /**
  * ...
  * @author 
  */
-class MetadataTransformerTest 
+class AnnotationReplaceTest 
 {
 	public function new() {}
 	
