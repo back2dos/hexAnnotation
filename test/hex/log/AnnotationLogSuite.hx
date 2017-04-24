@@ -7,5 +7,8 @@ package hex.log;
 class AnnotationLogSuite
 {
     @Suite( "Log" )
-    public var list : Array<Class<Dynamic>> = [ IsLoggableTest ];
+    public var list : Array<Class<Dynamic>> = [
+		IsLoggableTest,
+		IsLoggableExtendsAndCustomCasesTest
+	];
 }

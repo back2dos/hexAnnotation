@@ -15,6 +15,10 @@ Utilities for reading and writing class metadata
 - Handles inheritance chain.
 - Read properties and methods signatures (to be used by DI frameworks).
 - Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
+- Generates logging statements based on method annotations
+  - More info [here](src/hex/log/README.md)
+- Replaces expressions in annotations with their respective values
+  - More info [here](src/hex/annotation/README.md)
 
 ## Simple example
 
@@ -23,7 +27,7 @@ To generate a class description at compile-time, implement IInjectorContainer an
 ```haxe
 class MockClassInjectee implements IInjectorContainer
 {
-	0Inject( "id" )
+	@Inject( "id" )
 	public var property : String;
 	//property informations will be stored
 	
