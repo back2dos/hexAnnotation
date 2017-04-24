@@ -3,11 +3,14 @@
 Utility inteface that allows you to use special metadata to add logging statements to your methods.
 
 Build macro attached to the `IsLoggable` interface will cause several things to happen.
-- public variable `@Inject public var logger:ILogger` will be created
+- Macro will scan class for any variable or property of type ILogger
+  - If one exists it will be used in the logger calls
+  - If more than one exists the first one will be used and macro will produce a warning
+  - If no such property exists it will search through the inheritance chain until it finds one (using previous two rules)
+  - If search was still unseccessful a public variable `@Inject @Optional(true) public var logger:ILogger` will be created
 - in every method which is annotated with one of `@Debug`, `@Info`, `@Warn`, `@Error` or `@Fatal` metadata will be created a logger call
   - `@Debug` will produce `logger.debug` and vice versa
-- following check will be produced before every log statement to make sure logger exists even if it's not injected
-  - `if(logger == null) logger = hex.log.LogManager.getLogger("my.pack.MyClass");`
+
 
 ## Default behavior
 

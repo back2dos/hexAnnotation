@@ -7,6 +7,8 @@ import hex.di.annotation.FastAnnotationReader;
 import hex.error.PrivateConstructorException;
 import hex.util.MacroUtil;
 
+using haxe.macro.Tools;
+
 /**
  * ...
  * @author Francis Bourre
@@ -36,31 +38,86 @@ class LoggableBuilder
 			return fields;
 		}
 		
-		for ( f in fields )
+		var shouldAddField = true;
+		var loggerName = "";
+		
+		var isLogger = function(t:ComplexType):Bool
 		{
-			if ( f.name == "logger" )
+			return switch(t)
 			{
-				Context.error( "'logger' member will be added automatically in class that implements 'IsLoggable'", f.pos );
+				case macro :ILogger: true;
+				case macro :hex.log.ILogger: true;
+				case _: false;
 			}
 		}
 		
-		var shouldAddField = true;
-		var superClass = Context.getLocalClass().get().superClass;
-		if ( superClass != null )
+		var tryLoggerName = function(f:{name:String, pos:Position})
 		{
-			var classType = MacroUtil.getClassType( superClass.t.toString() );
-			if ( MacroUtil.implementsInterface( classType, MacroUtil.getClassType( Type.getClassName( IsLoggable ) ) ) )
+			if (loggerName == "")
 			{
+				loggerName = f.name;
 				shouldAddField = false;
+				//trace("Using custom logger variable: " + loggerName);
+			}
+			else
+			{
+				Context.warning("There is already one logger with name '" + loggerName+"' which will be used for logger calls", f.pos);
+			}
+		}
+		
+		
+		//try to get a loggerName from local class
+		for ( f in fields )
+		{
+			switch(f.kind)
+			{
+				case FVar(t) | FProp(_, _, t) if (isLogger(t)) :
+					tryLoggerName(f);
+				case _:
+			}
+		}
+		
+		
+		if(loggerName == "")
+		{
+			// no local logger found, scan superclasses
+			var superClass = Context.getLocalClass().get().superClass;
+			while ( superClass != null )
+			{
+				
+				var classType = MacroUtil.getClassType( superClass.t.toString() );
+				
+				for (field in classType.fields.get())
+				{
+					switch(field.kind)
+					{
+						case FVar(_, _) if (isLogger(field.type.toComplexType())):
+							tryLoggerName(field);
+						case _:
+					}
+				}
+				
+				if(loggerName == "")
+				{
+					//still no logger name, we have to go higher
+					superClass = classType.superClass;
+				}
+				else
+				{
+					//logger name found, no reason to go higher
+					superClass = null;
+				}
 			}
 		}
 		
 		if ( shouldAddField )
 		{
+			loggerName = "logger";
+			
 			fields.push({ 
 				kind: FVar(TPath( { name: "ILogger", pack:  [ "hex", "log" ], params: [] } ), null ), 
 		meta: [ { name: "Inject", params: [], pos: Context.currentPos() }, { name: "Optional", params: [macro true], pos: Context.currentPos() }, { name: ":noCompletion", params: [], pos: Context.currentPos() } ], 
-				name: "logger", 
+				name: loggerName, 
 				access: [ Access.APublic ],
 				pos: Context.currentPos()
 			});
@@ -126,11 +183,10 @@ class LoggableBuilder
 							debugArgs = methArgs;
 						}
 						var methodName = meta[ 0 ].name.toLowerCase();
-		
+						
 						var body = macro @:pos(f.pos) @:mergeBlock
 						{
-							if ( logger == null ) logger = ${hex.log.HexLog.getLoggerCall()};
-							logger.$methodName( $v{ message }, [ $a { debugArgs } ] );
+							$i{loggerName}.$methodName( $v{ message }, [ $a { debugArgs } ] );
 						};
 
 						expressions.push( body );
