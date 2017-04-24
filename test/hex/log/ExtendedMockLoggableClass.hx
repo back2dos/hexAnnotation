@@ -1,5 +1,4 @@
 package hex.log;
-import hex.module.Module;
 
 /**
  * ...
