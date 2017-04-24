@@ -4,6 +4,8 @@ import haxe.macro.Expr;
 import haxe.macro.Type;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.MetadataEntry;
+import hex.log.ILogger;
+import hex.log.LogManager;
 
 using haxe.macro.Tools;
 using Lambda;
@@ -13,13 +15,19 @@ class AnnotationReplaceBuilder
 {
 	
 	static var staticsCache:Map<String,Expr>;
+	
+	static var logger:ILogger;
 
 	public static macro function build():Array<Field>
 	{
+		if (logger == null)
+		{
+			logger = LogManager.getLoggerByClass(AnnotationReplaceBuilder);
+		}
+		
 		var fields = Context.getBuildFields();
 		fields.map(function (f)
 		{
-			//trace("--------- " + f.name);
 			f.meta.map(processMetadata);
 		});
 		
@@ -48,7 +56,8 @@ class AnnotationReplaceBuilder
 			case EConst(c):
 				return e;
 			case _:
-				trace(e.expr);
+				logger.debug(e);
+				logger.debug(e.expr);
 				Context.error('Unsupported metadata statement: ${e.expr}', e.pos);
 				return null;
 		}
@@ -80,14 +89,12 @@ class AnnotationReplaceBuilder
 							staticsCache.set(id, macro $v{v});
 							
 						case _:
-							trace(stat);
+							logger.debug(stat);
 							Context.error('Unhandled constant type: ${stat}', pos);
 					}
 					break;
 				}
 			}
-			//trace(id);
-			//trace(staticsCache.get(id));
 			if (!found)
 			{
 				Context.error('Constant "$id" not found', pos);
