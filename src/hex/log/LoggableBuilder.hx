@@ -43,12 +43,12 @@ class LoggableBuilder
 		
 		var isLogger = function(t:ComplexType):Bool
 		{
-			return switch(t)
+			return (t == null) ? false : switch(t)
 			{
 				case macro :ILogger: true;
 				case macro :hex.log.ILogger: true;
 				case _: false;
-			}
+			};
 		}
 		
 		var tryLoggerName = function(f:{name:String, pos:Position})
