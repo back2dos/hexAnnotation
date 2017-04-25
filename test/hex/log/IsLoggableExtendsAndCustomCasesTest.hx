@@ -1,6 +1,8 @@
 package hex.log;
 
 import hex.log.ExtendedMockLoggableClass.AnotherExtendedMockLoggableClass;
+import hex.log.ExtendedMockLoggableClass.ClassThatExtendsClassWithVariableWithoutType;
+import hex.log.ExtendedMockLoggableClass.ClassWithVariableWithoutType;
 import hex.log.ExtendedMockLoggableClass.ExtendsLoggableAndOverridesLogger;
 import hex.log.ExtendedMockLoggableClass.ExtendsLoggableWithCustomLogger;
 import hex.log.ExtendedMockLoggableClass.MockLoggableClassWithCustomLogger;
@@ -112,5 +114,22 @@ class IsLoggableExtendsAndCustomCasesTest
 		Assert.equals(message, logger.debugMsg);
 	}
 	
+	@Test("Test class with variable without type")
+	public function testClassWithVariableWithoutType()
+	{
+		var type = new ClassWithVariableWithoutType();
+		
+		// This only needs to compile, functionality is tested in other tests
+		Assert.isNull(type.logger);
+	}
+	
+	@Test("Test class that extends class with variable without type")
+	public function testClassThatExtendsClassWithVariableWithoutType()
+	{
+		var type = new ClassThatExtendsClassWithVariableWithoutType();
+		
+		// This only needs to compile, functionality is tested in other tests
+		Assert.isNull(type.logger);
+	}
 	
 }

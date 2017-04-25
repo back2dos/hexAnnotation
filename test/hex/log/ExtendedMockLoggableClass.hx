@@ -70,3 +70,17 @@ class ExtendsLoggableAndOverridesLogger extends MockLoggableClassWithCustomLogge
 		
 	}
 }
+
+class ClassWithVariableWithoutType implements IsLoggable
+{
+	var unknown = "unknown";
+	
+	public function new() 
+	{
+	}
+}
+
+class ClassThatExtendsClassWithVariableWithoutType extends ClassWithVariableWithoutType implements IsLoggable
+{
+	
+}
