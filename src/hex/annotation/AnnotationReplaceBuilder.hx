@@ -47,12 +47,14 @@ class AnnotationReplaceBuilder
 		}).array();
 	}
 	
-	static function processParam(e:Expr):Expr
+	public static function processParam(e:Expr):Expr
 	{
 		switch(e.expr)
 		{
 			case EField(_.expr => EConst(CIdent(i)), str):
-				return processConst(i, str, e.pos);
+				return processConst(getId(i, str), processForeignConst.bind(i, str, e.pos), e.pos);
+			case EConst(CIdent(i)) if (i != "null"):
+				return processConst(getLocalId(i), processLocalConst.bind(i, e.pos), e.pos);
 			case EConst(c):
 				return e;
 			case _:
@@ -63,44 +65,74 @@ class AnnotationReplaceBuilder
 		}
 	}
 	
-	static function processConst(clss:String, field:String, pos:Position):Expr
+	static inline function getLocalId(field:String):String
+	{
+		return getId(Context.getLocalClass().get().name, field);
+	}
+	
+	static inline function getId(clss:String, field:String)
+	{
+		return '$clss.$field';
+	}
+	
+	static function processConst(id:String, findFunc:Void->Expr, pos:Position):Expr
 	{
 		if (staticsCache == null)
 		{
 			staticsCache = new Map<String, Expr>();
 		}
-		var id = '$clss.$field';
 		if (!staticsCache.exists(id))
 		{
-			var statics = Context.getType(clss).getClass().statics.get();
-			var found = false;
-			for (stat in statics)
+			var e = findFunc();
+			if(e != null)
 			{
-				if (stat.isPublic && stat.name == field)
-				{
-					found = true;
-					switch(stat.expr().expr)
-					{
-						case TConst(TString(v)):
-							staticsCache.set(id, macro $v{v});
-						case TConst(TInt(v)):
-							staticsCache.set(id, macro $v{v});
-						case TConst(TBool(v)):
-							staticsCache.set(id, macro $v{v});
-							
-						case _:
-							logger.debug(stat);
-							Context.error('Unhandled constant type: ${stat}', pos);
-					}
-					break;
-				}
+				staticsCache.set(id, e);
 			}
-			if (!found)
+			else
 			{
 				Context.error('Constant "$id" not found', pos);
 			}
 		}
 		return staticsCache.get(id);
+	}
+	
+	static function processLocalConst(field:String, pos:Position):Expr
+	{
+		var matchingFields = Context.getBuildFields().filter(function (f) return f.access.indexOf(AStatic) != -1 && f.name == field );
+		if(matchingFields.length == 1)
+		{
+			return switch(matchingFields[0].kind)
+			{
+				case FieldType.FVar(ct, e): macro $v{e.getValue()};
+				case _: null;
+			}
+		}
+		return null;
+	}
+	
+	static function processForeignConst(clss:String, field:String, pos:Position):Expr
+	{
+		var statics = Context.getType(clss).getClass().statics.get();
+		for (stat in statics)
+		{
+			if (stat.isPublic && stat.name == field)
+			{
+				return switch(stat.expr().expr)
+				{
+					case TConst(TString(v)):
+						macro $v{v};
+					case TConst(TInt(v)):
+						macro $v{v};
+					case TConst(TBool(v)):
+						macro $v{v};
+					case _:
+						logger.debug(stat);
+						Context.error('Unhandled constant type: ${stat}', pos);
+						null;
+				}
+			}
+		}
+		return null;
 	}
 	
 }

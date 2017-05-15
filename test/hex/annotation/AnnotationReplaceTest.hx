@@ -1,5 +1,7 @@
 package hex.annotation;
 import haxe.rtti.Meta;
+import hex.annotation.MockMetadataClass.MockInjectorContainerExtendsMockMetadataWithLocalVars;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithLocalVars;
 import hex.di.reflect.ClassDescription;
 import hex.di.reflect.FastClassDescriptionProvider;
 import hex.di.reflect.PropertyInjection;
@@ -46,6 +48,37 @@ class AnnotationReplaceTest
 		Assert.deepEquals(expectedMeta, meta);
 	}
 	
+	@Test("Metadata transformed - local vars")
+	public function testMetadataTransformedLocalVars()
+	{
+		var expectedMeta = {
+			injected_one : {
+				Inject : [injected_one_local.n]
+			}, 
+			injected_two : {
+				Inject : [injected_two_local.n]
+			}, 
+			injected_optional : {
+				Inject : [injected_optional_local.n], 
+				Optional : [injected_optional_local.o]
+			}, 
+			method : {
+				PostConstruct : [method_local.o]
+			}, 
+			methodWithMultipleArgs : {
+				Inject : [methodWithMultipleArgs_local.a[0].n, methodWithMultipleArgs_local.a[1].n]
+			}, 
+			methodWithMultipleArgsMixed : {
+				Inject : [null, methodWithMultipleArgsMixed_local.a[1].n]
+			}
+		};
+		
+		var meta = Meta.getFields(MockMetadataClassWithLocalVars);
+		
+		Assert.isNotNull(meta);
+		Assert.deepEquals(expectedMeta, meta);
+	}
+	
 	@Test("Class description transformed")
 	public function testClassDescriptionTransformed()
 	{
@@ -73,6 +106,24 @@ class AnnotationReplaceTest
 		
 		//Check postConstruct
 		Assert.arrayDeepContainsElementsFrom([method], description.pc);
+	}
+	
+	@Test("Class description transformed extends with local vars")
+	public function testClassDescriptionTransformedExtendsLocalVars()
+	{
+		var provider = new FastClassDescriptionProvider();
+		var description = provider.getClassDescription( MockInjectorContainerExtendsMockMetadataWithLocalVars );
+		
+		Assert.isNotNull( description, "description should not be null" );
+		
+		// Check properties
+		Assert.arrayDeepContainsElementsFrom([injected_one_local, injected_two_local, injected_optional_local], description.p);
+		
+		// Check methods
+		Assert.arrayDeepContainsElementsFrom([methodWithMultipleArgs_local, methodWithMultipleArgsMixed_local], description.m);
+		
+		//Check postConstruct
+		Assert.arrayDeepContainsElementsFrom([method_local], description.pc);
 	}
 	
 	// Expected reflected data:
@@ -124,6 +175,61 @@ class AnnotationReplaceTest
 	};
 	
 	static var method = {
+		m:"method", 
+		a:[], 
+		o:1
+	};
+	
+	//------------ local vars expected values
+	
+	static var injected_one_local = {
+		p:"injected_one",
+		t:"String",
+		n:"local one",
+		o:false
+	};
+	
+	static var injected_two_local = {
+		p:"injected_two",
+		t:"String",
+		n:"local two",
+		o:false
+	};
+	
+	static var injected_optional_local = {
+		p:"injected_optional",
+		t:"String",
+		n:"local three",
+		o:true
+	};
+	
+	
+	static var methodWithMultipleArgs_local = {
+		m: "methodWithMultipleArgs",
+		a: [{
+			t:"String", 
+			n:"local one", 
+			o:false
+		},{
+			t:"String", 
+			n:"local two", 
+			o:false
+		}]
+	};
+	static var methodWithMultipleArgsMixed_local = {
+		m: "methodWithMultipleArgsMixed",
+		a:[{
+			t:"String", 
+			n:"", 
+			o:false
+		},{
+			t:"String", 
+			n:"local three", 
+			o:false
+		}]
+	};
+	
+	static var method_local = {
 		m:"method", 
 		a:[], 
 		o:1
