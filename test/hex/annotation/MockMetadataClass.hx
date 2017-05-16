@@ -42,6 +42,43 @@ class MockMetadataClass implements IAnnotationReplace
 	
 }
 
+class MockMetadataClassWithFQCN implements IAnnotationReplace 
+{
+
+	public function new() 
+	{
+	}
+	
+	@Inject(hex.annotation.MockConstants.NAME_ONE)
+	public var injected_one:String;
+	
+	@Inject([hex.annotation.MockConstants.NAME_TWO])
+	public var injected_two:String;
+	
+	@Inject(hex.annotation.MockConstants.NAME_THREE)
+	@Optional(hex.annotation.MockConstants.BOOL_TRUE)
+	public var injected_optional:String;
+	
+	@PostConstruct( hex.annotation.MockConstants.NUMBER_ONE )
+	public function method():Void
+	{
+		
+	}
+	
+	@Inject(hex.annotation.MockConstants.NAME_ONE, hex.annotation.MockConstants.NAME_TWO)
+	public function methodWithMultipleArgs(arg0:String, arg1:String):Void
+	{
+		
+	}
+	
+	@Inject(null, hex.annotation.MockConstants.NAME_THREE)
+	public function methodWithMultipleArgsMixed(arg0:String, arg1:String):Void
+	{
+		
+	}
+	
+}
+
 class MockMetadataClassWithLocalVars implements IAnnotationReplace
 {
 	static var NAME_ONE = "local one";
@@ -80,7 +117,6 @@ class MockMetadataClassWithLocalVars implements IAnnotationReplace
 	}
 }
 
-
 class MockMetadataClassWithInjectorContainer implements IInjectorContainer implements IAnnotationReplace 
 {
 	public function new() 
@@ -89,6 +125,18 @@ class MockMetadataClassWithInjectorContainer implements IInjectorContainer imple
 	
 	@Inject(MockConstants.NAME_THREE)
 	@Optional(MockConstants.BOOL_TRUE)
+	public var injected_optional:String;
+	
+}
+
+class MockMetadataClassWithInjectorContainerWithFQCN implements IInjectorContainer implements IAnnotationReplace 
+{
+	public function new() 
+	{
+	}
+	
+	@Inject(hex.annotation.MockConstants.NAME_THREE)
+	@Optional(hex.annotation.MockConstants.BOOL_TRUE)
 	public var injected_optional:String;
 	
 }
@@ -107,6 +155,7 @@ class MockMetadataClassWithInjectorContainerWithLocalVars implements IInjectorCo
 	public var injected_optional:String;
 	
 }
+
 /*
 // Doesn't compile
 class MockMetadataClassWithInjectorContainerDifferentOrder implements IAnnotationReplace implements IInjectorContainer 

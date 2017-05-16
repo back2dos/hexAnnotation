@@ -53,6 +53,18 @@ class AnnotationReplaceBuilder
 		{
 			case EField(_.expr => EConst(CIdent(i)), str):
 				return processConst(getId(i, str), processForeignConst.bind(i, str, e.pos), e.pos);
+			case EField(e, str):
+				function getPath(expr:Expr):String
+				{
+					return switch(expr.expr)
+					{
+						case EField(e, str): '${getPath(e)}.$str';
+						case EConst(CIdent(i)): i;
+						case _: null;
+					}
+				}
+				var path = getPath(e);
+				return processConst(getId(path, str), processForeignConst.bind(path, str, e.pos), e.pos);
 			case EConst(CIdent(i)) if (i != "null"):
 				return processConst(getLocalId(i), processLocalConst.bind(i, e.pos), e.pos);
 			case EConst(c):

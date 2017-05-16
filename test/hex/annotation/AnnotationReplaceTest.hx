@@ -1,5 +1,7 @@
 package hex.annotation;
 import haxe.rtti.Meta;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithFQCN;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainerWithFQCN;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainerWithLocalVars;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithLocalVars;
 import hex.di.reflect.ClassDescription;
@@ -42,6 +44,37 @@ class AnnotationReplaceTest
 		};
 		
 		var meta = Meta.getFields(MockMetadataClass);
+		
+		Assert.isNotNull(meta);
+		Assert.deepEquals(expectedMeta, meta);
+	}
+	
+	@Test("Metadata transformed with FQCN")
+	public function testMetadataTransformedWithFQCN()
+	{
+		var expectedMeta = {
+			injected_one : {
+				Inject : [injected_one.n]
+			}, 
+			injected_two : {
+				Inject : [injected_two.n]
+			}, 
+			injected_optional : {
+				Inject : [injected_optional.n], 
+				Optional : [injected_optional.o]
+			}, 
+			method : {
+				PostConstruct : [method.o]
+			}, 
+			methodWithMultipleArgs : {
+				Inject : [methodWithMultipleArgs.a[0].n, methodWithMultipleArgs.a[1].n]
+			}, 
+			methodWithMultipleArgsMixed : {
+				Inject : [null, methodWithMultipleArgsMixed.a[1].n]
+			}
+		};
+		
+		var meta = Meta.getFields(MockMetadataClassWithFQCN);
 		
 		Assert.isNotNull(meta);
 		Assert.deepEquals(expectedMeta, meta);
@@ -98,6 +131,17 @@ class AnnotationReplaceTest
 		Assert.isNotNull( description, "description should not be null" );
 		
 		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional_local]);
+	}
+	
+	@Test("Class description transformed with FQCN")
+	public function testClassDescriptionTransformedWithFQCN()
+	{
+		var provider = new FastClassDescriptionProvider();
+		var description = provider.getClassDescription( MockMetadataClassWithInjectorContainerWithFQCN );
+		
+		Assert.isNotNull( description, "description should not be null" );
+		
+		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional]);
 	}
 	
 	// Expected reflected data:
