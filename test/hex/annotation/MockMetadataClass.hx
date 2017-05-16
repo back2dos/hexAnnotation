@@ -80,15 +80,6 @@ class MockMetadataClassWithLocalVars implements IAnnotationReplace
 	}
 }
 
-class MockInjectorContainerExtendsMockMetadata extends MockMetadataClass implements IInjectorContainer
-{
-	
-}
-
-class MockInjectorContainerExtendsMockMetadataWithLocalVars extends MockMetadataClassWithLocalVars implements IInjectorContainer
-{
-	
-}
 
 class MockMetadataClassWithInjectorContainer implements IInjectorContainer implements IAnnotationReplace 
 {
@@ -98,6 +89,21 @@ class MockMetadataClassWithInjectorContainer implements IInjectorContainer imple
 	
 	@Inject(MockConstants.NAME_THREE)
 	@Optional(MockConstants.BOOL_TRUE)
+	public var injected_optional:String;
+	
+}
+
+class MockMetadataClassWithInjectorContainerWithLocalVars implements IInjectorContainer implements IAnnotationReplace 
+{
+	public static var NAME_THREE = "local three";
+	static var BOOL_TRUE = true;
+	
+	public function new() 
+	{
+	}
+	
+	@Inject(NAME_THREE)
+	@Optional(BOOL_TRUE)
 	public var injected_optional:String;
 	
 }

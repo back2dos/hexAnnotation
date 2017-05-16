@@ -1,11 +1,10 @@
 package hex.annotation;
 import haxe.rtti.Meta;
-import hex.annotation.MockMetadataClass.MockInjectorContainerExtendsMockMetadataWithLocalVars;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainerWithLocalVars;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithLocalVars;
 import hex.di.reflect.ClassDescription;
 import hex.di.reflect.FastClassDescriptionProvider;
 import hex.di.reflect.PropertyInjection;
-import hex.annotation.MockMetadataClass.MockInjectorContainerExtendsMockMetadata;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainer;
 import hex.unittest.assertion.Assert;
 
@@ -87,43 +86,18 @@ class AnnotationReplaceTest
 		
 		Assert.isNotNull( description, "description should not be null" );
 		
-		Assert.arrayDeepContainsElementsFrom([injected_optional], description.p);
+		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional]);
 	}
 	
-	@Test("Class description transformed extends")
-	public function testClassDescriptionTransformedExtends()
+	@Test("Class description transformed with local vars")
+	public function testClassDescriptionTransformedWithLocalVars()
 	{
 		var provider = new FastClassDescriptionProvider();
-		var description = provider.getClassDescription( MockInjectorContainerExtendsMockMetadata );
+		var description = provider.getClassDescription( MockMetadataClassWithInjectorContainerWithLocalVars );
 		
 		Assert.isNotNull( description, "description should not be null" );
 		
-		// Check properties
-		Assert.arrayDeepContainsElementsFrom([injected_one, injected_two, injected_optional], description.p);
-		
-		// Check methods
-		Assert.arrayDeepContainsElementsFrom([methodWithMultipleArgs, methodWithMultipleArgsMixed], description.m);
-		
-		//Check postConstruct
-		Assert.arrayDeepContainsElementsFrom([method], description.pc);
-	}
-	
-	@Test("Class description transformed extends with local vars")
-	public function testClassDescriptionTransformedExtendsLocalVars()
-	{
-		var provider = new FastClassDescriptionProvider();
-		var description = provider.getClassDescription( MockInjectorContainerExtendsMockMetadataWithLocalVars );
-		
-		Assert.isNotNull( description, "description should not be null" );
-		
-		// Check properties
-		Assert.arrayDeepContainsElementsFrom([injected_one_local, injected_two_local, injected_optional_local], description.p);
-		
-		// Check methods
-		Assert.arrayDeepContainsElementsFrom([methodWithMultipleArgs_local, methodWithMultipleArgsMixed_local], description.m);
-		
-		//Check postConstruct
-		Assert.arrayDeepContainsElementsFrom([method_local], description.pc);
+		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional_local]);
 	}
 	
 	// Expected reflected data:
