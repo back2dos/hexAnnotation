@@ -47,12 +47,12 @@ class AnnotationReplaceBuilder
 		}).array();
 	}
 	
-	public static function processParam(e:Expr):Expr
+	public static function processParam(expression:Expr):Expr
 	{
-		switch(e.expr)
+		switch(expression.expr)
 		{
 			case EField(_.expr => EConst(CIdent(i)), str):
-				return processConst(getId(i, str), processForeignConst.bind(i, str, e.pos), e.pos);
+				return processConst(getId(i, str), processForeignConst.bind(i, str, expression.pos), expression);
 			case EField(e, str):
 				function getPath(expr:Expr):String
 				{
@@ -64,15 +64,15 @@ class AnnotationReplaceBuilder
 					}
 				}
 				var path = getPath(e);
-				return processConst(getId(path, str), processForeignConst.bind(path, str, e.pos), e.pos);
+				return processConst(getId(path, str), processForeignConst.bind(path, str, expression.pos), expression);
 			case EConst(CIdent(i)) if (i != "null"):
-				return processConst(getLocalId(i), processLocalConst.bind(i, e.pos), e.pos);
+				return processConst(getLocalId(i), processLocalConst.bind(i, expression.pos), expression);
 			case EConst(c):
-				return e;
+				return expression;
 			case _:
-				logger.debug(e);
-				logger.debug(e.expr);
-				Context.error('Unsupported metadata statement: ${e.expr}', e.pos);
+				logger.debug(expression);
+				logger.debug(expression.expr);
+				Context.error('Unsupported metadata statement: ${expression.expr}', expression.pos);
 				return null;
 		}
 	}
@@ -87,7 +87,7 @@ class AnnotationReplaceBuilder
 		return '$clss.$field';
 	}
 	
-	static function processConst(id:String, findFunc:Void->Expr, pos:Position):Expr
+	static function processConst(id:String, findFunc:Void->Expr, originalExpression:Expr):Expr
 	{
 		if (staticsCache == null)
 		{
@@ -102,7 +102,8 @@ class AnnotationReplaceBuilder
 			}
 			else
 			{
-				Context.error('Constant "$id" not found', pos);
+				staticsCache.set(id, originalExpression);
+				logger.warn('Constant "$id" not found');//, originalExpression.pos
 			}
 		}
 		return staticsCache.get(id);
@@ -124,7 +125,10 @@ class AnnotationReplaceBuilder
 	
 	static function processForeignConst(clss:String, field:String, pos:Position):Expr
 	{
-		var statics = Context.getType(clss).getClass().statics.get();
+		var clss = try Context.getType(clss).getClass() catch (_:Dynamic) null;
+		if (clss == null) return null;
+		
+		var statics = clss.statics.get();
 		for (stat in statics)
 		{
 			if (stat.isPublic && stat.name == field)
