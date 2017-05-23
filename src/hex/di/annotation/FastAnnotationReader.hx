@@ -3,10 +3,12 @@ package hex.di.annotation;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Expr.Field;
+import hex.annotation.AnnotationReplaceBuilder;
 import hex.di.reflect.ClassDescription;
 import hex.error.PrivateConstructorException;
 import hex.reflect.ClassReflectionData;
 import hex.util.ArrayUtil;
+using Lambda;
 
 /**
  * ...
@@ -43,6 +45,12 @@ class FastAnnotationReader
 		var reflectionData:Null<ExprOf<ClassDescription>>;
 		
 		var annotationFilter = [ "Inject", "PostConstruct", "Optional", "PreDestroy" ];
+		
+		// use AnnotationReplaceBuilder to to process the metadata but only the ones that we care about
+		fields
+			.flatMap(function (f) return f.meta)
+			.filter(function (m) return annotationFilter.indexOf(m.name) != -1)
+			.map(AnnotationReplaceBuilder.processMetadata);
 		
 		if ( hasBeenBuilt )
 		{

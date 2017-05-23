@@ -156,8 +156,6 @@ class MockMetadataClassWithInjectorContainerWithLocalVars implements IInjectorCo
 	
 }
 
-/*
-// Doesn't compile
 class MockMetadataClassWithInjectorContainerDifferentOrder implements IAnnotationReplace implements IInjectorContainer 
 {
 	public function new() 
@@ -169,4 +167,3 @@ class MockMetadataClassWithInjectorContainerDifferentOrder implements IAnnotatio
 	public var injected_optional:String;
 	
 }
-*/
