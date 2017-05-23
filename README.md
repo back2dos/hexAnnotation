@@ -14,7 +14,7 @@ Utilities for reading and writing class metadata
 - Read metadata at compile time.
 - Handles inheritance chain.
 - Read properties and methods signatures (to be used by DI frameworks).
-- Export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
+- Use [hexReflection](https://github.com/DoclerLabs/hexReflection) to export annotated (@Inject, @PostConstruct", @Optional, @PreDestroy) members information (essentially reflection data) to a static field instance.
 - Generates logging statements based on method annotations
   - More info [here](src/hex/log/README.md)
 - Replaces expressions in annotations with their respective values
