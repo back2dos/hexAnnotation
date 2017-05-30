@@ -26,15 +26,18 @@ class AnnotationReplaceBuilder
 		}
 		
 		var fields = Context.getBuildFields();
-		fields.map(function (f)
-		{
-			f.meta.map(processMetadata);
-		});
-		
+		buildFields(fields);
 		return fields;
 	}
 	
-	static function processMetadata(m:MetadataEntry):Void
+	public static function buildFields(fields:Array<Field>):Void
+	{
+		fields
+			.flatMap(function (f) return f.meta)
+			.map(processMetadata);
+	}
+	
+	public static function processMetadata(m:MetadataEntry):Void
 	{
 		m.params = m.params.flatMap(function(p){
 			switch(p.expr)
@@ -65,7 +68,7 @@ class AnnotationReplaceBuilder
 				}
 				var path = getPath(e);
 				return processConst(getId(path, str), processForeignConst.bind(path, str, expression.pos), expression);
-			case EConst(CIdent(i)) if (i != "null"):
+			case EConst(CIdent(i)) if (i != "null" && i != "true" && i != "false"):
 				return processConst(getLocalId(i), processLocalConst.bind(i, expression.pos), expression);
 			case EConst(c):
 				return expression;
@@ -103,7 +106,7 @@ class AnnotationReplaceBuilder
 			else
 			{
 				staticsCache.set(id, originalExpression);
-				logger.warn('Constant "$id" not found');//, originalExpression.pos
+				Context.warning('"$id" is not a constant value and won\'t be replaced', originalExpression.pos);
 			}
 		}
 		return staticsCache.get(id);
@@ -120,6 +123,7 @@ class AnnotationReplaceBuilder
 				case _: null;
 			}
 		}
+		
 		return null;
 	}
 	
