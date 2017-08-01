@@ -142,7 +142,6 @@ class LoggableBuilder
 							Context.error( "log metadata is forbidden on constructor", f.pos );
 						}
 					
-						#if debug
 						var logSetting =  LoggableBuilder._getParameters( meta );
 						
 						var methArgs : Array<Expr> = [];
@@ -192,7 +191,6 @@ class LoggableBuilder
 						expressions.push( body );
 						expressions.push( func.expr );
 						func.expr = macro @:pos(f.pos) $b { expressions };
-						#end
 						
 						for ( m in meta )
 						{
