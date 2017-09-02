@@ -18,14 +18,14 @@ becomes
 public var injectedOne:String;
 ```
 
-Expressions that are already constants wil remain unouched so `@Inject("one")` will stay the same. That also applies for combinations of expressions so `@Inject(MyConstants.NAME_ONE, "two")` changes to `@Inject("one", "two")`
+Expressions that are already constants will remain untouched so `@Inject("one")` will stay the same. That also applies to combinations of expressions so `@Inject(MyConstants.NAME_ONE, "two")` changes to `@Inject("one", "two")`
 
 Currently supported values of expressions:
 - `String`
 - `Bool`
 - `Int`
 
-Curretnly supported expressions that will be replaced:
+Currently supported expressions that will be replaced:
 - Constant in current class
   - `@Meta(TEST)`
 - Constant in different class
