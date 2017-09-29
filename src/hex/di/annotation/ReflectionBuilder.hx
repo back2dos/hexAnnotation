@@ -69,7 +69,7 @@ class ReflectionBuilder
 				//injectionName
 				{field: "n", expr: macro $v { key == null?"":key }},
 				//isOptional
-				{field: "o", expr: macro $v{isOpt==null?false:isOpt}}
+				{field: "o", expr: macro $v{isOpt==null?true:isOpt}}
 			]);
 			propValues.push( {expr: eProp, pos:Context.currentPos()} );
 		}
@@ -96,7 +96,7 @@ class ReflectionBuilder
 					//injectionName
 					{field: "n", expr: macro $v { key == null?"":key }},
 					//isOptional
-					{field: "o", expr: macro $v{isOpt==null?false:isOpt}}
+					{field: "o", expr: macro $v{isOpt==null?true:isOpt}}
 				]);
 				
 				argValues.push( { expr: eArg, pos:Context.currentPos() } );
@@ -170,7 +170,7 @@ class ReflectionBuilder
 					//injectionName
 					{field: "n", expr: macro $v { key == null?"":key }},
 					//isOptional
-					{field: "o", expr: macro $v{isOpt == null?false:isOpt}}
+					{field: "o", expr: macro $v{isOpt == null?true:isOpt}}
 				]);
 				
 				ctorArgValues.push( { expr: eCtorArg, pos:Context.currentPos() } );
