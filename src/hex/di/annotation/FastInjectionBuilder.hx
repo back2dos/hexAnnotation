@@ -1,5 +1,6 @@
 package hex.di.annotation;
 
+#if macro
 import haxe.ds.ArraySort;
 import haxe.macro.Context;
 import haxe.macro.Expr;
@@ -12,6 +13,7 @@ import hex.util.MacroUtil;
 
 using hex.util.ArrayUtil;
 using Lambda;
+#end
 
 /**
  * ...
