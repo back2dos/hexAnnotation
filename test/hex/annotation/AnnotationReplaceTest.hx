@@ -112,36 +112,45 @@ class AnnotationReplaceTest
 	}
 	
 	@Test("Class description transformed")
-	public function testClassDescriptionTransformed()
+	public function testReflectionTransformed()
 	{
-		var provider = new FastClassDescriptionProvider();
-		var description = provider.getClassDescription( MockMetadataClassWithInjectorContainer );
+		var o = new MockMetadataClassWithInjectorContainer();
+		var f = function( s1, s2, cl, b ) 
+		{
+			Assert.equals( MockConstants.NAME_THREE, s2 );
+			Assert.equals( MockConstants.BOOL_TRUE, !b );
+			return null; 
+		};
 		
-		Assert.isNotNull( description, "description should not be null" );
-		
-		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional]);
+		o.__ai( f, null );
 	}
 	
 	@Test("Class description transformed with local vars")
-	public function testClassDescriptionTransformedWithLocalVars()
+	public function testClassReflectionTransformedWithLocalVars()
 	{
-		var provider = new FastClassDescriptionProvider();
-		var description = provider.getClassDescription( MockMetadataClassWithInjectorContainerWithLocalVars );
+		var o = new MockMetadataClassWithInjectorContainerWithLocalVars();
+		var f = function( s1, s2, cl, b ) 
+		{
+			Assert.equals( MockMetadataClassWithInjectorContainerWithLocalVars.NAME_THREE, s2 );
+			Assert.equals( MockMetadataClassWithInjectorContainerWithLocalVars.BOOL_TRUE, !b );
+			return null; 
+		};
 		
-		Assert.isNotNull( description, "description should not be null" );
-		
-		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional_local]);
+		o.__ai( f, null );
 	}
 	
 	@Test("Class description transformed with FQCN")
-	public function testClassDescriptionTransformedWithFQCN()
+	public function testClassReflectionTransformedWithFQCN()
 	{
-		var provider = new FastClassDescriptionProvider();
-		var description = provider.getClassDescription( MockMetadataClassWithInjectorContainerWithFQCN );
+		var o = new MockMetadataClassWithInjectorContainerWithFQCN();
+		var f = function( s1, s2, cl, b ) 
+		{
+			Assert.equals( MockConstants.NAME_THREE, s2 );
+			Assert.equals( MockConstants.BOOL_TRUE, !b );
+			return null; 
+		};
 		
-		Assert.isNotNull( description, "description should not be null" );
-		
-		Assert.arrayDeepContainsElementsFrom(description.p, [injected_optional]);
+		o.__ai( f, null );
 	}
 	
 	// Expected reflected data:

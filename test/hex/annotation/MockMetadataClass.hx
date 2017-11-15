@@ -144,7 +144,7 @@ class MockMetadataClassWithInjectorContainerWithFQCN implements IInjectorContain
 class MockMetadataClassWithInjectorContainerWithLocalVars implements IInjectorContainer implements IAnnotationReplace 
 {
 	public static var NAME_THREE = "local three";
-	static var BOOL_TRUE = true;
+	public static var BOOL_TRUE = true;
 	
 	public function new() 
 	{
