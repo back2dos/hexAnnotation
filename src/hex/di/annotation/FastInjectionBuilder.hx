@@ -7,7 +7,6 @@ import haxe.macro.Expr;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.FieldType;
-import hex.error.PrivateConstructorException;
 import hex.reflect.ClassReflectionData;
 import hex.util.MacroUtil;
 
@@ -21,7 +20,7 @@ using Lambda;
  */
 class FastInjectionBuilder
 {
-	/** @private */ function new() throw new PrivateConstructorException( "This class can't be instantiated." );
+	/** @private */ function new() throw new hex.error.PrivateConstructorException( "This class can't be instantiated." );
 
 	#if macro
 	static public function _generateInjectionProcessorExpr( fields : Array<Field>, data : ClassReflectionData ) : Void
