@@ -88,8 +88,6 @@ class AnnotationTransformer
 			for ( removedField in f ) fields.remove( removedField );
 		}
 		
-		// Generate and append fields
-		hex.di.annotation.FastInjectionBuilder._generateInjectionProcessorExpr( fields, data );
 		return fields;
 	}
 	
