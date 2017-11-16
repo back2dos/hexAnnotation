@@ -48,7 +48,6 @@ class FastInjectionBuilder
 				var optional 	= ArrayUtil.find( ctorAnn.annotations, e => e.annotationName == "Optional" );
 				var isOpt 		= optional != null ? optional.annotationKeys[ i ] : false;
 
-				//var argType 		= MacroUtil.getPack( ctorAnn.arguments[ i ].type );
 				var injectionName 	= key == null ? "" : key;
 				var isOptional 		= isOpt == null ? false : isOpt;
 				isOptional 			= !isOptional;
@@ -71,7 +70,6 @@ class FastInjectionBuilder
 			var isOpt 		= optional != null ? optional.annotationKeys[ 0 ] : false;
 
 			var propertyName 	= property.name;
-			//var propertyType 	= MacroUtil.getPack( property.type );
 			var injectionName 	= key == null ? "" : key;
 			var isOptional 		= isOpt == null ? false : isOpt;
 			
@@ -91,7 +89,6 @@ class FastInjectionBuilder
 			var argProviders 	= [];
 			var methodName 		= method.name;
 			
-			//var argValues: Array<Expr> = [];
 			var argData = method.arguments;
 			for ( j in 0...argData.length )
 			{
@@ -100,7 +97,6 @@ class FastInjectionBuilder
 				var optional 		= ArrayUtil.find( method.annotations, e => e.annotationName == "Optional" );
 				var isOpt 			= optional != null ? optional.annotationKeys[ j ] : false;
 				
-				//var argType 		= MacroUtil.getPack( argData[ j ].type );
 				var injectionName 	= key == null ? "" : key;
 				var isOptional 		= isOpt == null ? false : isOpt;
 				isOptional 			= !isOptional;
