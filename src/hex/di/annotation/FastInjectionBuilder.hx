@@ -26,8 +26,8 @@ class FastInjectionBuilder
 	static public function _generateInjectionProcessorExpr( fields : Array<Field>, data : ClassReflectionData ) : Void
     {
 		var applyClassInjection : ExprOf<Dynamic->InjectorCall->Class<Dynamic>->Void> = null;
-		var applyConstructorInjection : ExprOf<Class<Dynamic>->InjectorCall->Dynamic> = null;
-		var applyPreDestroyInjection : ExprOf<Dynamic->InjectorCall->Void> = null;
+		var applyConstructorInjection : ExprOf<InjectorCall->Dynamic> = null;
+		var applyPreDestroyInjection : ExprOf<Dynamic->Void> = null;
 		
 		var className 	= data.name;
 		var type 		= macro $i { "type" };
@@ -57,7 +57,7 @@ class FastInjectionBuilder
 			//TODO make null provider
 			var tp = MacroUtil.getTypePath( className );
 			consExpression.push( macro @:mergeBlock { return new $tp( $a { ctorArgProvider } ); } );
-			applyConstructorInjection = macro function g( type : Class<Dynamic>, f : hex.di.annotation.InjectorCall ) : Dynamic { $b{ consExpression }; };
+			applyConstructorInjection = macro function g( f : hex.di.annotation.InjectorCall ) : Dynamic { $b{ consExpression }; };
 		}
 
 		//properties parsing
@@ -76,7 +76,7 @@ class FastInjectionBuilder
 			var providerID 		= 'p' + expressions.length;
 			var provider 		= macro $i { providerID };
 			isOptional 			= !isOptional;
-			expressions.push( macro @:mergeBlock { this.$propertyName = f( $v { property.type }, $v { injectionName }, targetType, $v { isOptional } ); } );
+			expressions.push( macro @:mergeBlock { this.$propertyName = f( $v { property.type }, $v { injectionName }, t, $v { isOptional } ); } );
 		}
 		
 		//methods parsing
@@ -138,14 +138,10 @@ class FastInjectionBuilder
 		if ( preDestroyExprs.length > 0 ) 
 		{
 			ArraySort.sort( preDestroyExprs, FastInjectionBuilder._sortExpressions );
-			applyPreDestroyInjection = macro function g( instance : Dynamic, f : hex.di.annotation.InjectorCall ) : Void { $b{ preDestroyExprs }; };
+			applyPreDestroyInjection = macro function g() : Void { $b{ preDestroyExprs }; };
 		}
 
 		applyClassInjection = macro function g( instance : Dynamic, f : hex.di.annotation.InjectorCall ) : Void { $b { expressions }; };
-		
-
-		var args : Array<FunctionArg> = [ { name: 'f', type: macro:hex.di.annotation.InjectorCall, opt: false }, { name: 'targetType', type: macro:Class<Dynamic>, opt: false } ];
-		var ret : ComplexType = macro : Void;
 		
 		var aiAccess = _isOverriden( '__ai' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
 		var apAccess = _isOverriden( '__ap' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
@@ -157,8 +153,8 @@ class FastInjectionBuilder
 			access:  aiAccess,
 			kind: FieldType.FFun( 
 				{
-					args:  	args,
-					ret: 	ret,
+					args:  	[ { name: 'f', type: macro:hex.di.annotation.InjectorCall, opt: false }, { name: 't', type: macro:Class<Dynamic>, opt: false } ],
+					ret: 	macro : Void,
 					expr:	macro $b { expressions }
 				}
 			), 
@@ -174,7 +170,7 @@ class FastInjectionBuilder
 				access:  [ Access.APublic, Access.AStatic ],
 				kind: FieldType.FFun( 
 					{
-						args:  	args,
+						args:  	[ { name: 'f', type: macro:hex.di.annotation.InjectorCall, opt: false } ],
 						ret: 	macro:Dynamic,
 						expr:	macro $b{ consExpression }
 					}
@@ -192,8 +188,8 @@ class FastInjectionBuilder
 				access:  apAccess,
 				kind: FieldType.FFun( 
 					{
-						args:  	args,
-						ret: 	ret,
+						args:  	[],
+						ret: 	macro : Void,
 						expr:	macro $b{ preDestroyExprs }
 					}
 				), 
