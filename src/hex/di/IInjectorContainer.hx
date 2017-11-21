@@ -5,7 +5,7 @@ package hex.di;
  */
 #if !macro
 @:remove
-@:autoBuild( hex.di.annotation.FastAnnotationReader.readMetadata( hex.di.IInjectorContainer ) )
+@:autoBuild( hex.di.annotation.AnnotationTransformer.readMetadata( hex.di.IInjectorContainer ) )
 #end
 interface IInjectorContainer
 {

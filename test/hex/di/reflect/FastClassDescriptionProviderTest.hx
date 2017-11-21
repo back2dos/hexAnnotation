@@ -1,5 +1,6 @@
 package hex.di.reflect;
 
+import hex.di.IInjectable;
 import hex.di.reflect.FastClassDescriptionProvider;
 import hex.unittest.assertion.Assert;
 
@@ -22,4 +23,12 @@ class FastClassDescriptionProviderTest
 private class MockClass
 {
 	static public var __INJECTION_DATA : ClassDescription = { c: { a: [] }, p: [], m: [], pc: [], pd: [] };
+}
+
+class MockClassInjectee implements IInjectable
+{
+	public function new() 
+	{
+		
+	}
 }

@@ -11,7 +11,10 @@ import hex.reflect.ClassReflectionData;
 using Lambda;
 
 /**
- * ...
+ * This class is used to generate reflection footprints.
+ * It was designed previously for automatic DI.
+ * @see AnnotationTransformer for faster implementation.
+ * 
  * @author Francis Bourre
  */
 class FastAnnotationReader
@@ -56,7 +59,7 @@ class FastAnnotationReader
 		{
 			// get the existing data and remove them from the static_classes
 			var existingData = hex.reflect.ReflectionBuilder._static_classes.find( function(d) return d.name == localClass.module );
-			hex.reflect.ReflectionBuilder._static_classes.remove(existingData);
+			hex.reflect.ReflectionBuilder._static_classes.remove( existingData );
 			
 			// reflect new fields
 			fields = hex.reflect.ReflectionBuilder.parseMetadata( metadataExpr, fields, annotationFilter, false );
@@ -65,7 +68,7 @@ class FastAnnotationReader
 			var data = hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ];
 			
 			//merge everything together
-			var mergedData = mergeReflectionData(existingData, data);
+			var mergedData = mergeReflectionData( existingData, data );
 			
 			//write the merged data back
 			hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ] = mergedData;
