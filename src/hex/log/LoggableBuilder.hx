@@ -3,6 +3,7 @@ package hex.log;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Printer;
+import hex.di.annotation.AnnotationTransformer;
 import hex.di.annotation.FastAnnotationReader;
 import hex.error.PrivateConstructorException;
 import hex.util.MacroUtil;
@@ -206,7 +207,8 @@ class LoggableBuilder
 			
 		}
 		
-		return FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
+		FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
+		return AnnotationTransformer.reflect( macro hex.di.IInjectorContainer, fields );
 	}
 	
 	static function _getParameters( meta : Metadata ) : LogSetting
