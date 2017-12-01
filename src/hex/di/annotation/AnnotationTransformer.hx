@@ -18,21 +18,13 @@ class AnnotationTransformer
 #if macro
 	private static var _map : Map<String, Bool> = new Map();
 	
-	/** @private */
-    function new()
-    {
-        throw new PrivateConstructorException();
-    }
-	
+	/** @private */ function new() throw new PrivateConstructorException();
+    	
 	macro public static function readMetadata( metadataExpr : Expr ) : Array<Field>
 	{
-		//if it's an interface we don't want to build reflection data
-		if ( Context.getLocalClass().get().isInterface )
-		{
-			return Context.getBuildFields();
-		}
-
-		return reflect( metadataExpr, Context.getBuildFields() );
+		return //if it's an interface we don't want to build reflection data
+			if ( Context.getLocalClass().get().isInterface ) Context.getBuildFields();
+			else reflect( metadataExpr, Context.getBuildFields() );
 	}
 	
 	public static function reflect( metadataExpr : Expr, fields : Array<Field>  ) : Array<Field>
@@ -40,11 +32,9 @@ class AnnotationTransformer
 		var localClass 		= Context.getLocalClass().get();
 		var className 		= localClass.pack.join( "." ) + "." + localClass.name;
 		var hasBeenBuilt 	= AnnotationTransformer._map.exists( className );
-		
-		//Reflection data to be used to generate fields
-		var data : ClassReflectionData;
-		
 		var annotationFilter = [ "Inject", "PostConstruct", "Optional", "PreDestroy" ];
+		
+		var data : ClassReflectionData; //Reflection data to be used to generate fields
 		
 		// use AnnotationReplaceBuilder to to process the metadata but only the ones that we care about
 		fields
@@ -82,11 +72,9 @@ class AnnotationTransformer
 		AnnotationTransformer._map.set( className, true );
 		
 		var f = fields.filter( function ( f ) { return f.name == "__ai" || f.name == "__ac" || f.name == "__ap"; } );
-		if ( f.length != 0 )
-		{
-			//remove existing reflection data
-			for ( removedField in f ) fields.remove( removedField );
-		}
+		
+		//remove existing reflection data
+		if ( f.length != 0 ) for ( removedField in f ) fields.remove( removedField );
 		
 		// Generate and append fields
 		hex.di.annotation.FastInjectionBuilder._generateInjectionProcessorExpr( fields, data );
@@ -104,6 +92,5 @@ class AnnotationTransformer
 			methods: 		data1.methods.concat( data2.methods )
 		};
 	}
-	
 #end
 }

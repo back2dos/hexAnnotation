@@ -10,7 +10,6 @@ import haxe.macro.Expr.FieldType;
 import hex.reflect.ClassReflectionData;
 import hex.util.MacroUtil;
 
-using hex.util.ArrayUtil;
 using Lambda;
 #end
 
@@ -43,9 +42,9 @@ class FastInjectionBuilder
 		{
 			for ( i in 0...ctorAnn.arguments.length )
 			{
-				var inject 		= ArrayUtil.find( ctorAnn.annotations, e => e.annotationName == "Inject" );
+				var inject 		= ctorAnn.annotations.find(function(e) return e.annotationName == "Inject");
 				var key 		= inject != null ? inject.annotationKeys[ i ] : "";
-				var optional 	= ArrayUtil.find( ctorAnn.annotations, e => e.annotationName == "Optional" );
+				var optional 	= ctorAnn.annotations.find( function(e) return e.annotationName == "Optional");
 				var isOpt 		= optional != null ? optional.annotationKeys[ i ] : false;
 
 				var injectionName 	= key == null ? "" : key;
@@ -64,9 +63,9 @@ class FastInjectionBuilder
 		var propValues: Array<Expr> = [];
 		for ( property in data.properties )
 		{
-			var inject 		= ArrayUtil.find( property.annotations, e => e.annotationName == "Inject" );
+			var inject 		= property.annotations.find(function(e) return e.annotationName == "Inject");
 			var key 		= inject != null ? inject.annotationKeys[ 0 ] : "";
-			var optional 	= ArrayUtil.find( property.annotations, e => e.annotationName == "Optional" );
+			var optional 	= property.annotations.find(function(e) return e.annotationName == "Optional" );
 			var isOpt 		= optional != null ? optional.annotationKeys[ 0 ] : false;
 
 			var propertyName 	= property.name;
@@ -92,9 +91,9 @@ class FastInjectionBuilder
 			var argData = method.arguments;
 			for ( j in 0...argData.length )
 			{
-				var inject 			= ArrayUtil.find( method.annotations, e => e.annotationName == "Inject" );
+				var inject 			= method.annotations.find(function(e) return e.annotationName == "Inject");
 				var key 			= inject != null ? inject.annotationKeys[ j ] : "";
-				var optional 		= ArrayUtil.find( method.annotations, e => e.annotationName == "Optional" );
+				var optional 		= method.annotations.find(function(e) return e.annotationName == "Optional");
 				var isOpt 			= optional != null ? optional.annotationKeys[ j ] : false;
 				
 				var injectionName 	= key == null ? "" : key;
@@ -104,8 +103,8 @@ class FastInjectionBuilder
 			}
 
 			//method building
-			var postConstruct 	= ArrayUtil.find( method.annotations, e => e.annotationName == "PostConstruct" );
-			var preDestroy 		= ArrayUtil.find( method.annotations, e => e.annotationName == "PreDestroy" );
+			var postConstruct 	= method.annotations.find(function(e) return e.annotationName == "PostConstruct");
+			var preDestroy 		= method.annotations.find(function(e) return e.annotationName == "PreDestroy");
 			var order 			= 0;
 
 			if ( postConstruct != null )
