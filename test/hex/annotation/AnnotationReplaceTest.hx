@@ -1,13 +1,11 @@
 package hex.annotation;
+
 import haxe.rtti.Meta;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithFQCN;
+import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainer;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainerWithFQCN;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainerWithLocalVars;
 import hex.annotation.MockMetadataClass.MockMetadataClassWithLocalVars;
-import hex.di.reflect.ClassDescription;
-import hex.di.reflect.FastClassDescriptionProvider;
-import hex.di.reflect.PropertyInjection;
-import hex.annotation.MockMetadataClass.MockMetadataClassWithInjectorContainer;
 import hex.unittest.assertion.Assert;
 
 /**
@@ -261,5 +259,4 @@ class AnnotationReplaceTest
 		a:[], 
 		o:1
 	};
-	
 }

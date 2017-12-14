@@ -7,10 +7,9 @@ using Lambda;
  * ...
  * @author ...
  */
-class FastAnnotationReaderTest 
+class FastAnnotationReaderTest //TODO convert to AnnotationTransformerTest
 {
-
-	@Test("Test FastAnnotationReader generates __INJECTION_DATA")
+	/*@Test("Test FastAnnotationReader generates __INJECTION_DATA")
 	public function testFastAnnotationReaderGeneratesInjectionData() : Void
 	{
 		Assert.isNotNull(ClassWithAnnotationsOnce.__INJECTION_DATA);
@@ -30,8 +29,7 @@ class FastAnnotationReaderTest
 		Assert.isNotNull(ClassWithAnnotationsAdded.__INJECTION_DATA);
 		Assert.isTrue(ClassWithAnnotationsAdded.__INJECTION_DATA.p.count(function(p) return p.p == "injectHere") == 1);
 		Assert.isTrue(ClassWithAnnotationsAdded.__INJECTION_DATA.p.count(function(p) return p.p == "addedField") == 1);
-	}
-	
+	}*/
 }
 
 @:build(hex.di.annotation.AnnotationBuilder.reflectOnce())

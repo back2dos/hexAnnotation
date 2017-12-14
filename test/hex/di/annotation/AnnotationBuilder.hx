@@ -14,14 +14,14 @@ class AnnotationBuilder
 	macro public static function reflectOnce():Array<Field>
 	{
 		var fields = Context.getBuildFields();
-		return FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
+		return AnnotationTransformer.reflect( macro hex.di.IInjectorContainer, fields );
 	}
 	
 	macro public static function reflectTwice():Array<Field>
 	{
 		var fields = Context.getBuildFields();
-		fields = FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
-		return FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
+		fields = AnnotationTransformer.reflect( macro hex.di.IInjectorContainer, fields );
+		return AnnotationTransformer.reflect( macro hex.di.IInjectorContainer, fields );
 	}
 	
 	macro public static function addFieldAndReflect():Array<Field>
@@ -38,7 +38,7 @@ class AnnotationBuilder
 				pos:Context.currentPos()
 			}]
 		});
-		return FastAnnotationReader.reflect( macro hex.di.IInjectorContainer, fields );
+		return AnnotationTransformer.reflect( macro hex.di.IInjectorContainer, fields );
 	}
 	
 }

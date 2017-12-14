@@ -6,6 +6,7 @@ import haxe.macro.Expr.Field;
 import hex.annotation.AnnotationReplaceBuilder;
 import hex.error.PrivateConstructorException;
 import hex.reflect.ClassReflectionData;
+import hex.util.MacroUtil;
 
 using Lambda;
 
@@ -45,7 +46,7 @@ class AnnotationTransformer
 		if ( hasBeenBuilt )
 		{
 			// get the existing data and remove them from the static_classes
-			var existingData = hex.reflect.ReflectionBuilder._static_classes.find( function(d) return d.name == localClass.module );
+			var existingData = hex.reflect.ReflectionBuilder._static_classes.find( function(d) return d.name == MacroUtil.getClassName( localClass ) );
 			hex.reflect.ReflectionBuilder._static_classes.remove( existingData );
 			
 			// reflect new fields
@@ -67,6 +68,16 @@ class AnnotationTransformer
 			
 			//get/set data result
 			data = hex.reflect.ReflectionBuilder._static_classes[ hex.reflect.ReflectionBuilder._static_classes.length - 1 ];
+			
+			var superClass = Context.getLocalClass().get().superClass;
+			if ( superClass != null )
+			{
+				var superData = hex.reflect.ReflectionBuilder._static_classes.find( function(d) return d.name == MacroUtil.getClassName( superClass.t.get() ) );
+				if ( superData != null )
+				{
+					data = mergeReflectionData( superData, data );
+				}
+			}
 		}
 		
 		AnnotationTransformer._map.set( className, true );
