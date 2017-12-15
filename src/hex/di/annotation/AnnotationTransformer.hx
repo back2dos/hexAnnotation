@@ -92,15 +92,31 @@ class AnnotationTransformer
 		return fields;
 	}
 	
-	static private function mergeReflectionData( data1 : ClassReflectionData, data2 : ClassReflectionData ) : ClassReflectionData
+	static private function mergeReflectionData( existingData : ClassReflectionData, newData : ClassReflectionData ) : ClassReflectionData
 	{
+		var properties = existingData.properties.copy().filter( 
+			function ( prop ) 
+			{
+				for ( p in newData.properties ) if ( p.name == prop.name ) return false;
+				return true;
+			}
+		).concat( newData.properties );
+		
+		var methods = existingData.methods.copy().filter( 
+			function ( meth ) 
+			{
+				for ( m in newData.methods )if ( m.name == meth.name ) return false;
+				return true;
+			}
+		).concat( newData.methods );
+
 		return 
 		{
-			name: 			data1.name,
-			superClassName: data1.superClassName,
-			constructor: 	data2.constructor, // using constructor from the new data (nothing to merge here)
-			properties: 	data1.properties.concat( data2.properties ),
-			methods: 		data1.methods.concat( data2.methods )
+			name: 			newData.name,
+			superClassName: newData.superClassName,
+			constructor: 	newData.constructor != null ? newData.constructor : existingData.constructor,
+			properties: 	properties,
+			methods: 		methods
 		};
 	}
 #end

@@ -144,7 +144,7 @@ class FastInjectionBuilder
 		
 		var aiAccess = _isOverriden( '__ai' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
 		var apAccess = _isOverriden( '__ap' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
-		
+		//expressions.push( macro trace( this ) );
 		fields.push(
 		{
 			name:  "__ai",
