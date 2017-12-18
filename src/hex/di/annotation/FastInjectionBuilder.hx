@@ -48,7 +48,7 @@ class FastInjectionBuilder
 				var isOpt 		= optional != null ? optional.annotationKeys[ i ] : false;
 
 				var injectionName 	= key == null ? "" : key;
-				var isOptional 		= isOpt == null ? false : isOpt;
+				var isOptional 		= isOpt == null ? true : isOpt;
 				isOptional 			= !isOptional;
 				ctorArgProvider.push( macro @:mergeBlock { cast f( $v { ctorAnn.arguments[ i ].type }, $v { injectionName }, null, $v { isOptional } );} );
 			}
@@ -70,8 +70,8 @@ class FastInjectionBuilder
 
 			var propertyName 	= property.name;
 			var injectionName 	= key == null ? "" : key;
-			var isOptional 		= isOpt == null ? false : isOpt;
-			
+			var isOptional 		= isOpt == null ? true : isOpt;
+
 			var providerID 		= 'p' + expressions.length;
 			var provider 		= macro $i { providerID };
 			isOptional 			= !isOptional;
@@ -97,7 +97,7 @@ class FastInjectionBuilder
 				var isOpt 			= optional != null ? optional.annotationKeys[ j ] : false;
 				
 				var injectionName 	= key == null ? "" : key;
-				var isOptional 		= isOpt == null ? false : isOpt;
+				var isOptional 		= isOpt == null ? true : isOpt;
 				isOptional 			= !isOptional;
 				argProviders.push( macro @:mergeBlock { cast f( $v { argData[ j ].type }, $v { injectionName }, null, $v { isOptional } );} );
 			}
