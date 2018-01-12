@@ -148,7 +148,9 @@ class FastInjectionBuilder
 		fields.push(
 		{
 			name:  "__ai",
-			meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+			meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() },
+					{ name: ":keep", params: [], pos: Context.currentPos() }
+					],
 			access:  aiAccess,
 			kind: FieldType.FFun( 
 				{
@@ -165,7 +167,9 @@ class FastInjectionBuilder
 			fields.push(
 			{
 				name:  "__ac",
-				meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+				meta: [ 	{ name: ":noCompletion", params: [], pos: Context.currentPos() },
+							{ name: ":keep", params: [], pos: Context.currentPos() }
+						],
 				access:  [ Access.APublic, Access.AStatic ],
 				kind: FieldType.FFun( 
 					{
@@ -183,7 +187,9 @@ class FastInjectionBuilder
 			fields.push(
 			{
 				name:  "__ap",
-				meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+				meta: [ 	{ name: ":noCompletion", params: [], pos: Context.currentPos() },
+							{ name: ":keep", params: [], pos: Context.currentPos() } 
+						],
 				access:  apAccess,
 				kind: FieldType.FFun( 
 					{
