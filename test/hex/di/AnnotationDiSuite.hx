@@ -1,6 +1,6 @@
 package hex.di;
+
 import hex.di.annotation.FastAnnotationReaderTest;
-import hex.di.reflect.AnnotationReflectSuite;
 
 /**
  * ...
@@ -9,5 +9,5 @@ import hex.di.reflect.AnnotationReflectSuite;
 class AnnotationDiSuite
 {
     @Suite( "Di" )
-    public var list : Array<Class<Dynamic>> = [ AnnotationReflectSuite, FastAnnotationReaderTest ];
+    public var list : Array<Class<Dynamic>> = [ FastAnnotationReaderTest ];
 }

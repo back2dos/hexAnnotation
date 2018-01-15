@@ -229,8 +229,8 @@ class IsLoggableTest
 	public function testInterfacesImplementationOrder() : Void
 	{
 		var loggable = new MockLoggableClassInjected();
-		var p = MockLoggableClassInjected.__INJECTION_DATA.p.filter( function ( o ) { return (cast o).p == "logger" && (cast o).t == "hex.log.ILogger"; } );
-		Assert.equals( 1, p.length, "'MockLoggableClassInjected' should have reflection data for its logger property" );
+		var f = function( s: String, n: String, c: Class<Dynamic>, o: Bool ): Dynamic  return this.logger;
+		loggable.__ai( f, null );
+		Assert.equals( this.logger, loggable.logger, "'MockLoggableClassInjected' should have reflection data for its logger property" );
 	}
-	
 }

@@ -10,7 +10,6 @@ import haxe.macro.Expr.FieldType;
 import hex.reflect.ClassReflectionData;
 import hex.util.MacroUtil;
 
-using hex.util.ArrayUtil;
 using Lambda;
 #end
 
@@ -43,13 +42,13 @@ class FastInjectionBuilder
 		{
 			for ( i in 0...ctorAnn.arguments.length )
 			{
-				var inject 		= ArrayUtil.find( ctorAnn.annotations, e => e.annotationName == "Inject" );
+				var inject 		= ctorAnn.annotations.find(function(e) return e.annotationName == "Inject");
 				var key 		= inject != null ? inject.annotationKeys[ i ] : "";
-				var optional 	= ArrayUtil.find( ctorAnn.annotations, e => e.annotationName == "Optional" );
+				var optional 	= ctorAnn.annotations.find( function(e) return e.annotationName == "Optional");
 				var isOpt 		= optional != null ? optional.annotationKeys[ i ] : false;
 
 				var injectionName 	= key == null ? "" : key;
-				var isOptional 		= isOpt == null ? false : isOpt;
+				var isOptional 		= isOpt == null ? true : isOpt;
 				isOptional 			= !isOptional;
 				ctorArgProvider.push( macro @:mergeBlock { cast f( $v { ctorAnn.arguments[ i ].type }, $v { injectionName }, null, $v { isOptional } );} );
 			}
@@ -64,15 +63,15 @@ class FastInjectionBuilder
 		var propValues: Array<Expr> = [];
 		for ( property in data.properties )
 		{
-			var inject 		= ArrayUtil.find( property.annotations, e => e.annotationName == "Inject" );
+			var inject 		= property.annotations.find(function(e) return e.annotationName == "Inject");
 			var key 		= inject != null ? inject.annotationKeys[ 0 ] : "";
-			var optional 	= ArrayUtil.find( property.annotations, e => e.annotationName == "Optional" );
+			var optional 	= property.annotations.find(function(e) return e.annotationName == "Optional" );
 			var isOpt 		= optional != null ? optional.annotationKeys[ 0 ] : false;
 
 			var propertyName 	= property.name;
 			var injectionName 	= key == null ? "" : key;
-			var isOptional 		= isOpt == null ? false : isOpt;
-			
+			var isOptional 		= isOpt == null ? true : isOpt;
+
 			var providerID 		= 'p' + expressions.length;
 			var provider 		= macro $i { providerID };
 			isOptional 			= !isOptional;
@@ -92,20 +91,20 @@ class FastInjectionBuilder
 			var argData = method.arguments;
 			for ( j in 0...argData.length )
 			{
-				var inject 			= ArrayUtil.find( method.annotations, e => e.annotationName == "Inject" );
+				var inject 			= method.annotations.find(function(e) return e.annotationName == "Inject");
 				var key 			= inject != null ? inject.annotationKeys[ j ] : "";
-				var optional 		= ArrayUtil.find( method.annotations, e => e.annotationName == "Optional" );
+				var optional 		= method.annotations.find(function(e) return e.annotationName == "Optional");
 				var isOpt 			= optional != null ? optional.annotationKeys[ j ] : false;
 				
 				var injectionName 	= key == null ? "" : key;
-				var isOptional 		= isOpt == null ? false : isOpt;
+				var isOptional 		= isOpt == null ? true : isOpt;
 				isOptional 			= !isOptional;
 				argProviders.push( macro @:mergeBlock { cast f( $v { argData[ j ].type }, $v { injectionName }, null, $v { isOptional } );} );
 			}
 
 			//method building
-			var postConstruct 	= ArrayUtil.find( method.annotations, e => e.annotationName == "PostConstruct" );
-			var preDestroy 		= ArrayUtil.find( method.annotations, e => e.annotationName == "PreDestroy" );
+			var postConstruct 	= method.annotations.find(function(e) return e.annotationName == "PostConstruct");
+			var preDestroy 		= method.annotations.find(function(e) return e.annotationName == "PreDestroy");
 			var order 			= 0;
 
 			if ( postConstruct != null )
@@ -145,11 +144,13 @@ class FastInjectionBuilder
 		
 		var aiAccess = _isOverriden( '__ai' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
 		var apAccess = _isOverriden( '__ap' ) ? [ Access.APublic, Access.APublic, Access.AOverride ] : [ Access.APublic, Access.APublic ];
-		
+		//expressions.push( macro trace( this ) );
 		fields.push(
 		{
 			name:  "__ai",
-			meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+			meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() },
+					{ name: ":keep", params: [], pos: Context.currentPos() }
+					],
 			access:  aiAccess,
 			kind: FieldType.FFun( 
 				{
@@ -166,7 +167,9 @@ class FastInjectionBuilder
 			fields.push(
 			{
 				name:  "__ac",
-				meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+				meta: [ 	{ name: ":noCompletion", params: [], pos: Context.currentPos() },
+							{ name: ":keep", params: [], pos: Context.currentPos() }
+						],
 				access:  [ Access.APublic, Access.AStatic ],
 				kind: FieldType.FFun( 
 					{
@@ -184,7 +187,9 @@ class FastInjectionBuilder
 			fields.push(
 			{
 				name:  "__ap",
-				meta: [ { name: ":noCompletion", params: [], pos: Context.currentPos() } ],
+				meta: [ 	{ name: ":noCompletion", params: [], pos: Context.currentPos() },
+							{ name: ":keep", params: [], pos: Context.currentPos() } 
+						],
 				access:  apAccess,
 				kind: FieldType.FFun( 
 					{
