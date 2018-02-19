@@ -44,6 +44,8 @@ install:
 #hexReflection
   - git clone --recursive -b $DEPENDENCIES_BRANCH https://github.com/DoclerLabs/hexReflection.git ./hexreflection
   - haxelib dev hexreflection ./hexreflection
+#tink_macro
+  - haxelib install tink_macro 0.16.1
 #hexAnnotation
   - haxelib dev hexannotation .
   - export DISPLAY=:99.0;
