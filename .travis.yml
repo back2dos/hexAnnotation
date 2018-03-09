@@ -46,8 +46,6 @@ install:
   - haxelib dev hexreflection ./hexreflection
 #tink_macro
   - haxelib install tink_macro 0.16.1
-#tink_core
-  - haxelib install tink_core 1.16.1
 #hexAnnotation
   - haxelib dev hexannotation .
   - export DISPLAY=:99.0;
