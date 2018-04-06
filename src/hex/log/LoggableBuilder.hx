@@ -125,7 +125,22 @@ class LoggableBuilder
 		
 		var className = Context.getLocalClass().get().module;
 		var loggerAnnotations = [ DebugAnnotation, InfoAnnotation, WarnAnnotation, ErrorAnnotation, FatalAnnotation ];
-
+		var logLevel = 
+			switch Context.definedValue('log-level') {
+				case null: #if debug 0 #else 2 #end;
+				case "off": 100;
+				case v: 
+					var ret = -1;
+					var lower = v.toLowerCase();
+					for (i in 0...loggerAnnotations.length) {
+						if (loggerAnnotations[i].toLowerCase() == lower) {
+							ret = i;
+							break;
+						}
+					}
+					if (ret == -1) Context.error('invalid log-level "$v"', Context.currentPos());
+					ret;
+			}
 		for ( f in fields )
 		{
 			switch( f.kind )
@@ -133,7 +148,13 @@ class LoggableBuilder
 				case FFun( func ):
 					
 					var meta = f.meta.filter( function ( m ) { return loggerAnnotations.indexOf( m.name ) != -1; } );
-					var isLoggable = meta.length > 0;
+					for (m in meta) f.meta.remove(m);
+					var isLoggable = switch meta {
+						case []: false;
+						case [m]: loggerAnnotations.indexOf(m.name) >= logLevel;
+						default: Context.fatalError('only one logging metadata allowed', meta[1].pos);
+					}
+
 					if ( isLoggable ) 
 					{
 						if ( f.name == "new" )
@@ -191,13 +212,6 @@ class LoggableBuilder
 						expressions.push( func.expr );
 						func.expr = macro @:pos(f.pos) $b { expressions };
 						
-						for ( m in meta )
-						{
-							if ( loggerAnnotations.indexOf( m.name ) != -1 )
-							{
-								f.meta.remove( m );
-							}
-						}
 					}
 					
 				case _:
